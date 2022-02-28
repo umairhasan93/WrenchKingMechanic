@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { REACT_NATIVE_APP_API_KEY } from '@env'
 import { LocalNotification } from '../services/LocalNotification'
 import Pending from '../Components/Pending'
+import Todos from '../TODOS'
 
 const API = REACT_NATIVE_APP_API_KEY
 
@@ -34,9 +35,9 @@ const HomeScreen = ({ navigation }) => {
     // console.log(id)
     // console.log(bookings);
 
-    const handlePress = () => {
-        LocalNotification()
-    }
+    // const handlePress = () => {
+    //     LocalNotification()
+    // }
 
     const loading = () => {
         if (bookings.length > 0) {
@@ -92,7 +93,8 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             <View style={{ alignItems: 'center', paddingTop: 20, paddingBottom: 20 }}>
-                {display()}
+                {/* {display()} */}
+                <Todos />
             </View>
 
 

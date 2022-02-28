@@ -64,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
             return;
         }
         setLoading(true);
-
+        console.log('Hello')
         let url = `${API}mechanics/login`
         // console.log(url)
         fetch(url, {
