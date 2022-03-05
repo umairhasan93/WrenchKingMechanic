@@ -27,7 +27,7 @@ const HEIGHT = Dimensions.get('window').height
 const HomeScreen = ({ navigation }) => {
 
     const [mechanic, setMechanic] = useState([])
-    const [bookings, setBookings] = useState('')
+    const [bookings, setBookings] = useState([])
 
 
     // console.log(name)
@@ -47,10 +47,17 @@ const HomeScreen = ({ navigation }) => {
     }
 
     const display = () => {
-        if (bookings.length > 0) {
+        console.log(bookings.length)
+
+        if (bookings.length < 1) {
+            return (
+                <Todos mechanicId={id} />
+            )
+        } else {
             return (
                 <Pending mechanicId={id} />
             )
+
         }
     }
 
@@ -59,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
             setMechanic(JSON.parse(data))
         })
 
-        let url = `${API}booking/mechanicBooking/`
+        let url = `${API}booking/mechanicPendingBooking/`
         fetch(url + id)
             .then(resp => resp.json())
             .then(resp => setBookings(resp))
@@ -70,7 +77,7 @@ const HomeScreen = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#1d196e' }}>
             {loading()}
             <View style={{
                 flexDirection: 'row',
@@ -92,9 +99,9 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.headerText}>Wrench King</Text>
             </View>
 
-            <View style={{ alignItems: 'center', paddingTop: 20, paddingBottom: 20 }}>
-                {/* {display()} */}
-                <Todos />
+            <View style={{ flex: 1 }}>
+                {display()}
+                {/* <Todos mechanicId={id} /> */}
             </View>
 
 
