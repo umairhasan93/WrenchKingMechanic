@@ -26,19 +26,18 @@ export function DrawerContent(props) {
 
     const [localUser, setLocalUser] = useState([])
     useEffect(() => {
-        AsyncStorage.getItem('user').then(data => {
+        AsyncStorage.getItem('mechanic').then(data => {
             setLocalUser(JSON.parse(data))
         })
     }, [])
 
-    // console.log(localUser)
 
     return (
         <View>
 
             <View style={styles.userDetails}>
 
-                <Text style={styles.name}>Mechanic</Text>
+                <Text style={styles.name}>{localUser.name}</Text>
 
             </View>
             <View
@@ -71,28 +70,12 @@ export function DrawerContent(props) {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        activeOpacity={0.6}
-                        style={styles.drawerItemContainer}
-                        onPress={() => navigation.navigate("UpdateProfileScreen", { id: id })}
-                    >
-                        <View>
-                            <Icon
-                                name='user'
-                                size={18}
-                                style={styles.icon}
-                            />
-                        </View>
-                        <View style={{ marginLeft: WIDTH / 30, }}>
-                            <Text style={styles.text}>Profile</Text>
-                        </View>
-                    </TouchableOpacity>
 
                     <TouchableOpacity
                         activeOpacity={0.6}
                         style={styles.drawerItemContainer}
-                        onPress={() => navigation.navigate("BookingStatus",
-                            { id: localUser.contact }
+                        onPress={() => navigation.navigate("TodosScreen",
+                            { id: localUser.contactNo }
                         )}
                     >
                         <View>
@@ -104,7 +87,7 @@ export function DrawerContent(props) {
                         </View>
 
                         <View style={{ marginLeft: WIDTH / 31 }}>
-                            <Text style={styles.text}>Your Bookings</Text>
+                            <Text style={styles.text}>Todos</Text>
                         </View>
                     </TouchableOpacity>
 

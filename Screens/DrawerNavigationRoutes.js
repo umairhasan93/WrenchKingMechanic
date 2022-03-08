@@ -7,6 +7,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 // Import Screens
 import { DrawerContent } from './Components/DrawerContent'
 import HomeScreen from './drawerScreens/HomeScreen';
+import TodosScreen from './TODOS'
 
 
 const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ const DrawerNavigatorRoutes = () => {
                 drawerStyle={{ width: 350 }}
             >
                 <Drawer.Screen name="HomeScreen" component={HomeScreen} />
+                <Drawer.Screen name="TodosScreen" component={TodosScreen} />
 
             </Drawer.Navigator>
 
