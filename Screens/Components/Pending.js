@@ -32,6 +32,14 @@ export default Pending = (props) => {
         );
     };
 
+    const showToastWithGravityError = () => {
+        ToastAndroid.showWithGravity(
+            'Time Not Selected',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+        );
+    };
+
     const [hours, setHours] = useState('')
     const [minutes, setMinutes] = useState('')
     const [selectedHour, setSelectedHour] = useState(8)
@@ -130,60 +138,65 @@ export default Pending = (props) => {
     }
 
     const Accept = () => {
-        let url = `${API}booking/`
-        console.log(url + identifier)
-        fetch(url + identifier, {
-            method: 'PUT',
-            body: JSON.stringify({
-                Status: 'Confirmed'
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        })
 
-            .then((response) => response.json())
-            .then((json) => {
-                // console.log(json)
-            })
-            .catch(err => {
-                console.log({ err });
+        if (time === '') {
+            showToastWithGravityError()
+        } else {
+            let url = `${API}booking/`
+            console.log(url + identifier)
+            fetch(url + identifier, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    Status: 'Confirmed'
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
             })
 
+                .then((response) => response.json())
+                .then((json) => {
+                    // console.log(json)
+                })
+                .catch(err => {
+                    console.log({ err });
+                })
 
-        let url1 = `${API}confirmedbooking/confirmedbooking`
-        fetch(url1, {
-            method: 'POST',
-            body: JSON.stringify({
-                User_Name: username,
-                User_Number: usernumber,
-                User_Email: useremail,
-                Car_Company: carcompany,
-                Model: model,
-                Model_Year: modelyear,
-                Mechanic_Name: mechanicname,
-                Mechanic_Number: mechanicnumber,
-                Mechanic_Address: mechanicaddress,
-                Mechanic_Speciality: mechanicspeciality,
-                Booking_Date: bookingdate,
-                Requested_Date: requesteddate,
-                Type: type,
-                Status: 'Confirmed',
-                Time_Of_Service: time
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        })
 
-            .then((response) => response.json())
-            .then((json) => {
-                console.log(json)
-                showToastWithGravity()
+            let url1 = `${API}confirmedbooking/confirmedbooking`
+            fetch(url1, {
+                method: 'POST',
+                body: JSON.stringify({
+                    User_Name: username,
+                    User_Number: usernumber,
+                    User_Email: useremail,
+                    Car_Company: carcompany,
+                    Model: model,
+                    Model_Year: modelyear,
+                    Mechanic_Name: mechanicname,
+                    Mechanic_Number: mechanicnumber,
+                    Mechanic_Address: mechanicaddress,
+                    Mechanic_Speciality: mechanicspeciality,
+                    Booking_Date: bookingdate,
+                    Requested_Date: requesteddate,
+                    Type: type,
+                    Status: 'Confirmed',
+                    Time_Of_Service: time
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
             })
-            .catch(err => {
-                console.log({ err });
-            })
+
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log(json)
+                    showToastWithGravity()
+                })
+                .catch(err => {
+                    console.log({ err });
+                })
+        }
     }
 
 

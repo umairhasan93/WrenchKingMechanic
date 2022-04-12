@@ -18,6 +18,7 @@ import { REACT_NATIVE_APP_API_KEY } from '@env'
 import { LocalNotification } from '../services/LocalNotification'
 import Pending from '../Components/Pending'
 import Todos from '../TODOS'
+import Services from '../ServicesScreen'
 
 const API = REACT_NATIVE_APP_API_KEY
 
@@ -77,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#1d196e' }}>
+        <SafeAreaView style={{ flex: 1 }}>
             {loading()}
             <View style={{
                 flexDirection: 'row',
@@ -100,8 +101,9 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             <View style={{ flex: 1 }}>
-                {display()}
-                {/* <Todos mechanicId={id} /> */}
+                {/* {display()} */}
+
+                <Services mechanicId={id} />
             </View>
 
 
