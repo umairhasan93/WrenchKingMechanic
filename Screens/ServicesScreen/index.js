@@ -23,7 +23,7 @@ const Services = () => {
     const [services, setServices] = useState([])
 
     const [isChecked, setIsChecked] = useState(false)
-
+    // console.log(services.service.MechanicType)
     useEffect(() => {
         let url = `${API}serviceCharges`
         // console.log(url)
@@ -31,7 +31,7 @@ const Services = () => {
             .then(resp => resp.json())
             .then(resp => {
                 setServices(resp)
-                // console.log(todays)
+                // console.log(resp.MechanicType)
             })
             .catch((error) => console.error(error))
 
@@ -58,7 +58,7 @@ const Services = () => {
                             <View style={styles.row} key={index}>
                                 <View style={{
                                     marginBottom: 10,
-                                    // backgroundColor: 'yellow',
+                                    backgroundColor: 'yellow',
                                     width: WIDTH / 2.31
                                 }}>
 
@@ -80,13 +80,14 @@ const Services = () => {
                                         ) : null
                                     }
                                 </View>
+
                                 <View style={{
                                     margin: 10,
-                                    // backgroundColor: 'blue',
+                                    backgroundColor: 'blue',
                                     width: WIDTH / 2.31
                                 }}>
                                     {
-                                        (index % 2 === 1) ? (
+                                        (index % 2 === 0) ? (
                                             // <Text style={styles.text}>{service.Service}</Text>
                                             <CheckBox
                                                 style={{}}
