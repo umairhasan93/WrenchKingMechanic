@@ -9,9 +9,14 @@ import {
     StyleSheet,
     Dimensions,
 } from "react-native"
+import AsyncStorage from '@react-native-community/async-storage'
 import CheckBox from 'react-native-check-box'
 import { Card } from 'react-native-paper';
 import { REACT_NATIVE_APP_API_KEY } from '@env'
+
+import AxleCheckbox from '../Components/AxleCheckbox'
+import TuningCheckbox from '../Components/TuningCheckBox'
+import ACCheckbox from '../Components/ACChechBox'
 
 const API = REACT_NATIVE_APP_API_KEY
 
@@ -20,24 +25,54 @@ const HEIGHT = Dimensions.get('window').height
 
 const Services = () => {
 
-    const [services, setServices] = useState([])
 
     const [isChecked, setIsChecked] = useState(false)
-    // console.log(services.service.MechanicType)
+
+    const [services, setServices] = useState([])
+    const [mechanic, setMechanic] = useState([])
+
+
+    const [charges, setCharges] = useState([])
+
+    const id = 'Axle'
+    console.log(id)
+    console.log(services)
+
     useEffect(() => {
-        let url = `${API}serviceCharges`
-        // console.log(url)
-        fetch(url)
-            .then(resp => resp.json())
-            .then(resp => {
-                setServices(resp)
-                // console.log(resp.MechanicType)
-            })
-            .catch((error) => console.error(error))
+
+        AsyncStorage.getItem('mechanic').then(data => {
+            setMechanic(JSON.parse(data))
+        })
+
+        // let url = `${API}serviceCharges/`
+        // // console.log(url)
+        // fetch(url + id)
+        //     .then(resp => resp.json())
+        //     .then(resp => {
+        //         setServices(resp)
+        //         // console.log(resp.MechanicType)
+        //     })
+        //     .catch((error) => console.error(error))
 
     }, [])
 
+    const display = () => {
 
+        // console.warn(id)
+        if (id === 'Axle') {
+            return (
+                <AxleCheckbox />
+            )
+        } else if (id === 'Tuning') {
+            return (
+                <TuningCheckbox />
+            )
+        } else if (id === 'AC') {
+            return (
+                <ACCheckbox />
+            )
+        }
+    }
 
     return (
         <View style={styles.page}>
@@ -52,67 +87,11 @@ const Services = () => {
                 </Text>
             </View>
             <View style={styles.detailsContainer}>
-                {
-                    services.map((service, index) => {
-                        return (
-                            <View style={styles.row} key={index}>
-                                <View style={{
-                                    marginBottom: 10,
-                                    backgroundColor: 'yellow',
-                                    width: WIDTH / 2.31
-                                }}>
-
-                                    {
-                                        (index % 2 === 0) ? (
-                                            // <Text style={styles.text}>{service.Service}</Text>
-                                            <CheckBox
-                                                style={{}}
-                                                rightTextStyle={{ fontSize: 18, color: 'black' }}
-                                                checkBoxColor={'red'}
-                                                checkedCheckBoxColor={'#05b545'}
-                                                onClick={() => {
-                                                    setIsChecked(!isChecked)
-
-                                                }}
-                                                isChecked={isChecked}
-                                                rightText={service.Service}
-                                            />
-                                        ) : null
-                                    }
-                                </View>
-
-                                <View style={{
-                                    margin: 10,
-                                    backgroundColor: 'blue',
-                                    width: WIDTH / 2.31
-                                }}>
-                                    {
-                                        (index % 2 === 0) ? (
-                                            // <Text style={styles.text}>{service.Service}</Text>
-                                            <CheckBox
-                                                style={{}}
-                                                rightTextStyle={{ fontSize: 18, color: 'black' }}
-                                                checkBoxColor={'red'}
-                                                checkedCheckBoxColor={'#05b545'}
-                                                onClick={() => {
-                                                    setIsChecked(!isChecked)
-
-                                                }}
-                                                isChecked={isChecked}
-                                                rightText={service.Service}
-                                            />
-                                        ) : null
-                                    }
-                                </View>
-                            </View>
-                        )
-                    })
-                }
-            </View>
-
-            <View>
+                {display()}
 
             </View>
+
+
         </View>
     )
 }
