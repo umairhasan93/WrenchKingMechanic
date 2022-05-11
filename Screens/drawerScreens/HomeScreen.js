@@ -101,9 +101,9 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             <View style={{ flex: 1 }}>
-                {/* {display()} */}
+                {display()}
 
-                <Services mechanicId={id} />
+                {/* <Services mechanicId={id} /> */}
             </View>
 
 

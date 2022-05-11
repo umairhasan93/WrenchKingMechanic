@@ -9,9 +9,10 @@ import {
     StyleSheet,
     Dimensions,
 } from "react-native"
-import CheckBox from 'react-native-check-box'
+import CheckBox from '@react-native-community/checkbox';
 import { REACT_NATIVE_APP_API_KEY } from '@env'
 import AsyncStorage from '@react-native-community/async-storage'
+import { useNavigation } from '@react-navigation/native';
 
 
 const API = REACT_NATIVE_APP_API_KEY
@@ -19,7 +20,11 @@ const API = REACT_NATIVE_APP_API_KEY
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
-const TuningCheckbox = () => {
+const TuningCheckbox = (props) => {
+
+    const navigation = useNavigation()
+
+    const id = props.mechanicId
 
     const showToastWithGravityError = () => {
         ToastAndroid.showWithGravity(
@@ -29,79 +34,107 @@ const TuningCheckbox = () => {
         );
     };
 
-    const [isChecked, setIsChecked] = useState(false)
-
-    const [isChecked0, setIsChecked0] = useState(false)
-    const [isChecked1, setIsChecked1] = useState(false)
-    const [isChecked2, setIsChecked2] = useState(false)
-    const [isChecked3, setIsChecked3] = useState(false)
-    const [isChecked4, setIsChecked4] = useState(false)
-    const [isChecked5, setIsChecked5] = useState(false)
-    const [isChecked6, setIsChecked6] = useState(false)
-    const [isChecked7, setIsChecked7] = useState(false)
-    const [isChecked8, setIsChecked8] = useState(false)
-
-
-    const [cb0Value, setCB0Value] = useState('')
-    const [cb1Value, setCB1Value] = useState('')
-    const [cb2Value, setCB2Value] = useState('')
-    const [cb3Value, setCB3Value] = useState('')
-    const [cb4Value, setCB4Value] = useState('')
-    const [cb5Value, setCB5Value] = useState('')
-    const [cb6Value, setCB6Value] = useState('')
-    const [cb7Value, setCB7Value] = useState('')
-    const [cb8Value, setCB8Value] = useState('')
-
+    const [modalVisible, setModalVisible] = useState(false);
 
     const [services, setServices] = useState([])
     const [mechanic, setMechanic] = useState([])
 
-    const id = 'Tuning'
-    // console.warn(services[6].Charges)
+    // const id = 'Tuning'
+    // // console.warn(services[8].Charges)
+
+    const initialState = {
+        Oil: false,
+        OilFilter: false,
+        AirFilter: false,
+        BrakeOil: false,
+        AutomaticGearOil: false,
+        ManualGearOil: false,
+        FrontBrakePads: false,
+        RearBrakePads: false,
+        BrakeDiskPolish: false
+    };
+
+    const amount = [3000, 1100, 550, 1500, 6000, 3500, 4500, 5500, 2500]
+
+    const total = []
+
+    const [state, setState] = React.useState(initialState);
+    const [toggleButton, setToggleButton] = React.useState(false);
 
     const [sum, setSum] = useState('')
 
     const bill = () => {
-        if (isChecked0 === true || isChecked1 === true || isChecked2 === true || isChecked3 === true || isChecked4 === true || isChecked5 === true || isChecked6 === true || isChecked7 === true || isChecked8 === true) {
-            setSum(cb0Value + cb1Value + cb2Value + cb3Value + cb4Value + cb5Value + cb6Value + cb7Value + cb8Value)
-
+        if (state.Oil === true || state.OilFilter === true || state.AirFilter === true || state.BrakeOil === true || state.AutomaticGearOil === true || state.ManualGearOil === true || state.FrontBrakePads === true || state.RearBrakePads === true || state.BrakeDiskPolish === true) {
+            setSum(total.reduce((a, b) => a + b, 0))
+            setModalVisible(!modalVisible)
         } else {
             showToastWithGravityError()
         }
     }
 
+    const display = (key) => {
+        if (key === 'Oil') {
+            total.push(amount[0])
+            return (
+                <Text style={styles.amountText}>{amount[0]}</Text>
+            )
+        } else if (key === 'OilFilter') {
+            total.push(amount[1])
+            return (
+                <Text style={styles.amountText}>{amount[1]}</Text>
+            )
+        } else if (key === 'AirFilter') {
+            total.push(amount[2])
+            return (
+                <Text style={styles.amountText}>{amount[2]}</Text>
+            )
+        } else if (key === 'BrakeOil') {
+            total.push(amount[3])
+            return (
+                <Text style={styles.amountText}>{amount[3]}</Text>
+            )
+        } else if (key === 'AutomaticGearOil') {
+            total.push(amount[4])
+            return (
+                <Text style={styles.amountText}>{amount[4]}</Text>
+            )
+        } else if (key === 'ManualGearOil') {
+            total.push(amount[5])
+            return (
+                <Text style={styles.amountText}>{amount[5]}</Text>
+            )
+        } else if (key === 'FrontBrakePads') {
+            total.push(amount[6])
+            return (
+                <Text style={styles.amountText}>{amount[6]}</Text>
+            )
+        } else if (key === 'RearBrakePads') {
+            total.push(amount[7])
+            return (
+                <Text style={styles.amountText}>{amount[7]}</Text>
+            )
+        } else if (key === 'BrakeDiskPolish') {
+            total.push(amount[8])
+            return (
+                <Text style={styles.amountText}>{amount[8]}</Text>
+            )
+        }
+    }
+
     const clear = () => {
         setSum()
-        setCB0Value()
-        setCB1Value()
-        setCB2Value()
-        setCB3Value()
-        setCB4Value()
-        setCB5Value()
-        setCB6Value()
-        setCB7Value()
-        setCB8Value()
-        setIsChecked0(false)
-        setIsChecked1(false)
-        setIsChecked2(false)
-        setIsChecked3(false)
-        setIsChecked4(false)
-        setIsChecked5(false)
-        setIsChecked6(false)
-        setIsChecked7(false)
-        setIsChecked8(false)
-
-
+        total.splice(0, total.length)
+        setState(initialState)
     }
 
     useEffect(() => {
 
-        AsyncStorage.getItem('mechanic').then(data => {
-            setMechanic(JSON.parse(data))
-        })
+        // AsyncStorage.getItem('mechanic').then(data => {
+        //     setMechanic(JSON.parse(data))
+        // })
 
         let url = `${API}serviceCharges/`
-        // console.log(url)
+        console.log(url + id)
         fetch(url + id)
             .then(resp => resp.json())
             .then(resp => {
@@ -115,183 +148,189 @@ const TuningCheckbox = () => {
 
     return (
         <View>
-            {/* <Text>Tuning</Text> */}
-            <View>
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked0(!isChecked0)
-                        if (isChecked0 === false) {
-                            setCB0Value(services[0].Charges)
-                            console.warn(cb0Value)
-                        } else if (isChecked0 === true) {
-                            setCB0Value('')
-                            console.warn(cb0Value)
-
-                        }
-                    }}
-                    isChecked={isChecked0}
-                    rightText={'Oil'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked1(!isChecked1)
-                        if (isChecked1 === false) {
-                            setCB1Value(services[1].Charges)
-                        } else if (isChecked1 === true) {
-                            setCB1Value('')
-                        }
-                    }}
-                    isChecked={isChecked1}
-                    rightText={'Oil Filter'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked2(!isChecked2)
-                        if (isChecked2 === false) {
-                            setCB2Value(services[2].Charges)
-                        } else if (isChecked2 === true) {
-                            setCB2Value('')
-                        }
-                    }}
-                    isChecked={isChecked2}
-                    rightText={'Air Filter'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked3(!isChecked3)
-                        if (isChecked3 === false) {
-                            setCB3Value(services[3].Charges)
-                        } else if (isChecked3 === true) {
-                            setCB3Value('')
-                        }
-                    }}
-                    isChecked={isChecked3}
-                    rightText={'Brake Oil'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked4(!isChecked4)
-                        if (isChecked4 === false) {
-                            setCB4Value(services[4].Charges)
-                        } else if (isChecked4 === true) {
-                            setCB4Value('')
-                        }
-                    }}
-                    isChecked={isChecked4}
-                    rightText={'Automatic Gear Oil'}
-                />
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked5(!isChecked5)
-                        if (isChecked5 === false) {
-                            setCB5Value(services[5].Charges)
-                        } else if (isChecked5 === true) {
-                            setCB5Value('')
-                        }
-                    }}
-                    isChecked={isChecked5}
-                    rightText={'Manual Gear Oil'}
-                />
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked6(!isChecked6)
-                        if (isChecked6 === false) {
-                            setCB6Value(services[6].Charges)
-                        } else if (isChecked6 === true) {
-                            setCB6Value('')
-                        }
-                    }}
-                    isChecked={isChecked6}
-                    rightText={'Front Brake Pads'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked7(!isChecked7)
-                        if (isChecked7 === false) {
-                            setCB7Value(services[7].Charges)
-                        } else if (isChecked7 === true) {
-                            setCB7Value('')
-                        }
-                    }}
-                    isChecked={isChecked7}
-                    rightText={'Rear Brake Pads'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked8(!isChecked8)
-                        if (isChecked8 === false) {
-                            setCB8Value(services[8].Charges)
-                        } else if (isChecked8 === true) {
-                            setCB8Value('')
-                        }
-                    }}
-                    isChecked={isChecked8}
-                    rightText={'Brake Disk Polish'}
-                />
-
-
-                {/* {
-                    services.map((service, index) => {
-                        return (
-                            <View key={index}>
-                                <CheckBox
-                                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                                    checkBoxColor={'red'}
-                                    checkedCheckBoxColor={'#05b545'}
-                                    onClick={() => {
-                                        setIsChecked(
-                                            !isChecked
-                                        )
-                                    }}
-                                    isChecked={isChecked}
-                                    rightText={service.Service}
-                                />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={styles.modalHeader}>
+                            <View><Text style={styles.modalText}>Bill</Text></View>
+                            <View style={{ padding: 10, alignItems: 'center' }}>
+                                <Text style={{ fontSize: 20 }}>Total Amount</Text>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>Rs {sum}</Text>
                             </View>
-                        )
-                    })
-                } */}
+                        </View>
+
+                        <ScrollView style={{ flexDirection: 'row' }}>
+                            <View style={styles.resultContainer}>
+                                {Object.entries(state).map(([key, value]) => {
+                                    return (
+                                        value && (
+                                            <View key={key} style={{ paddingVertical: 10, flexDirection: 'row' }}>
+                                                <View style={{ width: WIDTH / 1.7 }}>
+                                                    <Text style={{ fontSize: 18, color: 'black' }}>{key}</Text>
+                                                </View>
+                                                <View style={{ width: WIDTH / 3.8, alignItems: 'center', justifyContent: 'center' }}>
+                                                    {
+                                                        display(key)
+                                                    }
+                                                </View>
+                                            </View>
+                                        )
+                                    );
+                                })}
+                            </View>
+
+                        </ScrollView >
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity style={styles.Button} onPress={() => {
+                                setModalVisible(false)
+                                navigation.navigate('HomeScreen')
+                            }}>
+                                <Text style={{ fontSize: 20, color: '#fff' }}>OK</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View >
+                </View >
+            </Modal >
+            <View>
+                <View style={{ padding: 8 }}>
+                    <View>
+                        <View>
+                            <View
+                                style={styles.checkboxWrapper}
+                            >
+                                <CheckBox
+                                    value={state.Oil}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            Oil: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Oil</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.OilFilter}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            OilFilter: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Oil Filter</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.AirFilter}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            AirFilter: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Air Filter</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.BrakeOil}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            BrakeOil: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Brake Oil</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.AutomaticGearOil}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            AutomaticGearOil: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Automatic Gear Oil</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.ManualGearOil}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            ManualGearOil: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Manual Gear Oil</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.FrontBrakePads}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            FrontBrakePads: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Front Brake Pads</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.RearBrakePads}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            RearBrakePads: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Rear Brake Pads</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.BrakeDiskPolish}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            BrakeDiskPolish: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>Brake Disk Polish</Text>
+                            </View>
+
+                        </View>
+
+                    </View>
+
+                </View>
+
+
             </View>
             <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
@@ -318,7 +357,7 @@ const styles = StyleSheet.create({
     generateBill: {
         backgroundColor: 'dodgerblue',
         borderRadius: 10,
-        width: WIDTH / 2,
+        width: WIDTH / 2.5,
         height: WIDTH / 7,
         margin: 10,
         alignItems: 'center',
@@ -336,7 +375,7 @@ const styles = StyleSheet.create({
     clear: {
         backgroundColor: 'red',
         borderRadius: 10,
-        width: WIDTH / 3.5,
+        width: WIDTH / 2.5,
         height: WIDTH / 7,
         margin: 10,
         alignItems: 'center',
@@ -349,6 +388,90 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+    },
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: '#00000065'
+    },
+    modalView: {
+        margin: 10,
+        backgroundColor: "#ffffff",
+        borderRadius: 10,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 10,
+        width: WIDTH / 1.1,
+        height: '98%',
+        paddingBottom: 20
+    },
+
+    modalHeader: {
+        width: '100%',
+        height: HEIGHT / 4.2,
+        padding: 10,
+        backgroundColor: 'lavender'
+    },
+
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontSize: 30,
+        color: 'black'
+    },
+
+    amountText: {
+        fontSize: 18,
+        color: 'green',
+        fontWeight: 'bold',
+        textDecorationLine: 'underline'
+    },
+
+    Button: {
+        backgroundColor: 'dodgerblue',
+        width: WIDTH / 2,
+        height: WIDTH / 8,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+
+    resultContainer: {
+        padding: 20,
+        width: WIDTH
+    },
+    container: {
+
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+
+    checkboxWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 6.5,
+    },
+
+    checkboxText: {
+        fontSize: 20,
+        color: 'black'
     }
 
 })

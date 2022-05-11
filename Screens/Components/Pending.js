@@ -12,6 +12,7 @@ import {
 import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-community/async-storage'
 import { REACT_NATIVE_APP_API_KEY } from '@env'
 
@@ -21,6 +22,8 @@ const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
 export default Pending = (props) => {
+
+
 
     const id = props.mechanicId
 
@@ -40,14 +43,21 @@ export default Pending = (props) => {
         );
     };
 
-    const [hours, setHours] = useState('')
-    const [minutes, setMinutes] = useState('')
-    const [selectedHour, setSelectedHour] = useState(8)
-    const [selectedMinutes, setSelectedMinutes] = useState(0)
-    const [meridiem, setMeridiem] = useState('a.m')
-    const [isPressed, setIsPressed] = useState(false)
+    const initialState = {
+        Das: false,
+        Bara: false,
+        Do: false,
+        Char: false,
+        Che: false,
+
+    };
+
+    const [state, setState] = useState(initialState)
+
+
+    // const [isPressed, setIsPressed] = useState(false)
     const [bookings, setBookings] = useState([])
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(true);
     const [identifier, setIdentifier] = useState('')
     const [username, setUsername] = useState('')
     const [usernumber, setUsernumber] = useState('')
@@ -62,7 +72,7 @@ export default Pending = (props) => {
     const [bookingdate, setBookingdate] = useState('')
     const [requesteddate, setRequesteddate] = useState('')
     const [type, setType] = useState('')
-    const [time, setTime] = useState('')
+
 
 
     console.log(id)
@@ -75,73 +85,26 @@ export default Pending = (props) => {
             .then(resp => setBookings(resp))
             .catch((error) => console.error(error))
 
+        // let url1 = `${API}bookingToday/`
+        // fetch(url1 + id)
+        //     .then(resp => resp.json())
+        //     .then(resp => setB(resp))
+        //     .catch((error) => console.error(error))
+
     }, [])
-
-    const SetTime = () => {
-        if (selectedHour <= 9 && selectedMinutes <= 9) {
-            setHours(selectedHour)
-            setMinutes('0' + selectedMinutes)
-            setTime(hours + ' : ' + minutes + ' ' + meridiem)
-
-        } else {
-            setHours(selectedHour)
-            setMinutes(selectedMinutes)
-            setTime(hours + ' : ' + minutes + ' ' + meridiem)
-        }
-        console.log(time)
-    }
-
-    const HoursIncrement = () => {
-        if (selectedHour === 12) {
-            setSelectedHour(1)
-        } else {
-            setSelectedHour(selectedHour + 1)
-        }
-    }
-    const HoursDecrement = () => {
-        if (selectedHour === 1) {
-            setSelectedHour(12)
-        } else {
-            setSelectedHour(selectedHour - 1)
-        }
-    }
-
-    const MinutesIncrement = () => {
-        if (selectedMinutes === 59) {
-            setSelectedMinutes(0)
-        } else {
-            setSelectedMinutes(selectedMinutes + 1)
-        }
-    }
-    const MinutesDecrement = () => {
-        if (selectedMinutes === 0) {
-            setSelectedMinutes(59)
-        } else {
-            setSelectedMinutes(selectedMinutes - 1)
-        }
-    }
-
-    const changeMeridiem = () => {
-        setIsPressed(!isPressed)
-        if (isPressed) {
-            setMeridiem('a.m')
-        } else {
-            setMeridiem('p.m')
-        }
-    }
-
 
 
     const confirm = () => {
-        SetTime()
-        setModalVisible(!modalVisible)
+        if (state.Das === true || state.Bara === true || state.Do === true || state.Char === true || state.Che === true) {
+            setModalVisible(!modalVisible)
+        } else {
+            showToastWithGravityError()
+        }
     }
 
     const Accept = () => {
 
-        if (time === '') {
-            showToastWithGravityError()
-        } else {
+        if (state.Das === true || state.Bara === true || state.Do === true || state.Char === true || state.Che === true) {
             let url = `${API}booking/`
             console.log(url + identifier)
             fetch(url + identifier, {
@@ -196,6 +159,9 @@ export default Pending = (props) => {
                 .catch(err => {
                     console.log({ err });
                 })
+        } else {
+            showToastWithGravityError()
+            setModalVisible(true)
         }
     }
 
@@ -220,8 +186,7 @@ export default Pending = (props) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         setModalVisible(false)
-                                        setSelectedHour(8)
-                                        setSelectedMinutes(0)
+
                                     }}
                                     style={{ marginRight: -55, marginTop: -13 }}
                                 >
@@ -234,68 +199,74 @@ export default Pending = (props) => {
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={styles.modalTimeContainer}>
-                                <View style={styles.HoursView}>
-
-                                    <TouchableOpacity onPress={HoursIncrement}>
-                                        <Ionicons
-                                            name="caret-up-outline"
-                                            size={55}
-                                            color="#000"
-                                        />
-                                    </TouchableOpacity>
-
-                                    <View style={styles.HoursDisplay}>
-                                        <Text style={styles.displayText}>{(selectedHour < 10) ? "0" : null}{selectedHour}</Text>
-                                    </View>
-
-                                    <TouchableOpacity onPress={HoursDecrement}>
-                                        <Ionicons
-                                            name="caret-down-outline"
-                                            size={55}
-                                            color="#000"
-                                        />
-                                    </TouchableOpacity>
-
-                                </View>
-                                <View style={{ justifyContent: 'center', marginLeft: 20 }}>
-                                    <Text style={{ fontSize: 45, marginTop: -8 }}>:</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={styles.checkboxWrapper}>
+                                    <CheckBox
+                                        value={state.Das}
+                                        onValueChange={value =>
+                                            setState({
+                                                ...state,
+                                                Das: value,
+                                            })
+                                        }
+                                    />
+                                    <Text style={styles.checkboxText}>10:00</Text>
                                 </View>
 
-                                <View style={styles.MinutesView}>
-
-                                    <TouchableOpacity onPress={MinutesIncrement}>
-                                        <Ionicons
-                                            name="caret-up-outline"
-                                            size={55}
-                                            color="#000"
-                                        />
-                                    </TouchableOpacity>
-
-                                    <View style={styles.HoursDisplay}>
-                                        <Text style={styles.displayText}>{(selectedMinutes < 10) ? "0" : null}{selectedMinutes}</Text>
-                                    </View>
-
-                                    <TouchableOpacity onPress={MinutesDecrement}>
-                                        <Ionicons
-                                            name="caret-down-outline"
-                                            size={55}
-                                            color="#000"
-                                        />
-                                    </TouchableOpacity>
-
-                                </View>
-
-                                <View style={styles.ampmView}>
-                                    <TouchableOpacity
-                                        activeOpacity={0.3}
-                                        style={{ backgroundColor: '#00000040', height: 45, justifyContent: 'center' }}
-                                        onPress={changeMeridiem}
-                                    >
-                                        <Text style={styles.meridiemText}>{meridiem}</Text>
-                                    </TouchableOpacity>
+                                <View style={styles.checkboxWrapper}>
+                                    <CheckBox
+                                        value={state.Bara}
+                                        onValueChange={value =>
+                                            setState({
+                                                ...state,
+                                                Bara: value,
+                                            })
+                                        }
+                                    />
+                                    <Text style={styles.checkboxText}>12:00</Text>
                                 </View>
                             </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={styles.checkboxWrapper}>
+                                    <CheckBox
+                                        value={state.Do}
+                                        onValueChange={value =>
+                                            setState({
+                                                ...state,
+                                                Do: value,
+                                            })
+                                        }
+                                    />
+                                    <Text style={styles.checkboxText}>02:00</Text>
+                                </View>
+
+                                <View style={styles.checkboxWrapper}>
+                                    <CheckBox
+                                        value={state.Char}
+                                        onValueChange={value =>
+                                            setState({
+                                                ...state,
+                                                Char: value,
+                                            })
+                                        }
+                                    />
+                                    <Text style={styles.checkboxText}>04:00</Text>
+                                </View>
+                            </View>
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.Che}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            Che: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>06:00</Text>
+                            </View>
+
+
 
                             <View style={styles.buttonView}>
                                 <TouchableOpacity
@@ -314,7 +285,7 @@ export default Pending = (props) => {
                         return (
                             <Card key={index} style={styles.card}>
                                 <View style={{ alignItems: 'center' }}>
-                                    <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'row', width: WIDTH }}>
                                         <TouchableOpacity
                                             style={styles.timeIcon}
                                             onPress={() => {
@@ -329,17 +300,17 @@ export default Pending = (props) => {
                                                 color='#fff'
                                             />
                                         </TouchableOpacity>
-                                        <View style={{ width: 163, alignItems: 'center', marginLeft: 30, marginRight: 30 }}>
+                                        <View style={{ width: 163, alignItems: 'center', marginLeft: 35, marginRight: 30 }}>
                                             <Text style={styles.nameText}>{booking.User_Name}</Text>
                                         </View>
 
-                                        <TouchableOpacity style={styles.listIcon}>
+                                        {/* <TouchableOpacity style={styles.listIcon}>
                                             <Icon
                                                 name="tasks"
                                                 size={24}
                                                 color='#fff'
                                             />
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
 
                                         {/* <View style={{ width: WIDTH / 4.5, backgroundColor: '#F9DB24', marginRight: -(WIDTH / 3.6), alignItems: 'center', justifyContent: 'center', borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}>
                                             <Text style={{ fontSize: 14, marginBottom: 2, fontWeight: 'bold', color: 'black' }}>{booking.Status}</Text>
@@ -497,6 +468,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#ddd',
+        marginLeft: 45
     },
 
     listIcon: {
@@ -547,7 +519,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 10,
         width: WIDTH / 1.2,
-        height: HEIGHT / 2
+        height: HEIGHT / 2.1
     },
 
     modalHeader: {
@@ -627,5 +599,18 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20
     },
+
+    checkboxWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 6,
+        marginRight: 20,
+        marginLeft: 10
+    },
+
+    checkboxText: {
+        fontSize: 20,
+        color: 'black'
+    }
 
 })

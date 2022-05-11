@@ -34,9 +34,9 @@ const Services = () => {
 
     const [charges, setCharges] = useState([])
 
-    const id = 'Axle'
-    console.log(id)
-    console.log(services)
+    const id = mechanic.speciality
+    // console.log(id)
+    // console.log(services)
 
     useEffect(() => {
 
@@ -44,15 +44,15 @@ const Services = () => {
             setMechanic(JSON.parse(data))
         })
 
-        // let url = `${API}serviceCharges/`
-        // // console.log(url)
-        // fetch(url + id)
-        //     .then(resp => resp.json())
-        //     .then(resp => {
-        //         setServices(resp)
-        //         // console.log(resp.MechanicType)
-        //     })
-        //     .catch((error) => console.error(error))
+        let url = `${API}serviceCharges/`
+        // console.log(url)
+        fetch(url + id)
+            .then(resp => resp.json())
+            .then(resp => {
+                setServices(resp)
+                // console.log(resp.MechanicType)
+            })
+            .catch((error) => console.error(error))
 
     }, [])
 
@@ -61,15 +61,15 @@ const Services = () => {
         // console.warn(id)
         if (id === 'Axle') {
             return (
-                <AxleCheckbox />
+                <AxleCheckbox mechanicId={id} />
             )
         } else if (id === 'Tuning') {
             return (
-                <TuningCheckbox />
+                <TuningCheckbox mechanicId={id} />
             )
         } else if (id === 'AC') {
             return (
-                <ACCheckbox />
+                <ACCheckbox mechanicId={id} />
             )
         }
     }

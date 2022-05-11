@@ -31,11 +31,10 @@ export const LocalNotification = () => {
         channelId: 'your-channel-id',
         autoCancel: true,
         title: "Booking Request", // (optional)
-        message: "Your Have a Pending Request By:", // (required)
+        message: "Your Have a Pending Request ", // (required)
         vibrate: true,
         vibration: 300,
         color: "green",
-        subText: 'Ponka',
         playSound: true,
         soundName: 'default',
         invokeApp: true,

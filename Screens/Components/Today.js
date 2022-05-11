@@ -11,6 +11,7 @@ import {
 } from "react-native"
 import { Card } from 'react-native-paper';
 import { REACT_NATIVE_APP_API_KEY } from '@env'
+import Services from '../ServicesScreen'
 
 const API = REACT_NATIVE_APP_API_KEY
 
@@ -58,6 +59,7 @@ const Today = (props) => {
                                                 <TouchableOpacity
                                                     style={styles.buttonContainer}
                                                     activeOpacity={0.6}
+                                                    onPress={navigation.navigate('ServicesScreen')}
                                                 >
                                                     <Text style={styles.buttonText}>Start</Text>
                                                 </TouchableOpacity>

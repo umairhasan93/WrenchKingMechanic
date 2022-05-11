@@ -9,17 +9,20 @@ import {
     StyleSheet,
     Dimensions,
 } from "react-native"
-import CheckBox from 'react-native-check-box'
+import CheckBox from '@react-native-community/checkbox';
 import { REACT_NATIVE_APP_API_KEY } from '@env'
 import AsyncStorage from '@react-native-community/async-storage'
-
+import { useNavigation } from '@react-navigation/native';
 
 const API = REACT_NATIVE_APP_API_KEY
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
-const ACCheckbox = () => {
+const ACCheckbox = (props) => {
+    const navigation = useNavigation()
+
+    const id = props.mechanicId
 
     const showToastWithGravityError = () => {
         ToastAndroid.showWithGravity(
@@ -28,43 +31,65 @@ const ACCheckbox = () => {
             ToastAndroid.CENTER
         );
     };
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const [isChecked0, setIsChecked0] = useState(false)
-    const [isChecked1, setIsChecked1] = useState(false)
-    const [isChecked2, setIsChecked2] = useState(false)
-
-    const [cb0Value, setCB0Value] = useState('')
-    const [cb1Value, setCB1Value] = useState('')
-    const [cb2Value, setCB2Value] = useState('')
 
     const [services, setServices] = useState([])
     const [mechanic, setMechanic] = useState([])
 
-    const id = 'AC'
-    // console.warn(services[6].Charges)
+    // const id = 'AC'
+    // // console.warn(services[2].Charges)
+
+    const initialState = {
+        ACGas: false,
+        ACChange: false,
+        ACService: false,
+
+    };
+
+    const amount = [600, 40000, 5000]
+
+    const total = []
+
+    const [state, setState] = React.useState(initialState);
+    const [toggleButton, setToggleButton] = React.useState(false);
 
     const [sum, setSum] = useState('')
 
     const bill = () => {
-        if (isChecked0 === true || isChecked1 === true || isChecked2 === true) {
-            setSum(cb0Value + cb1Value + cb2Value)
+        if (state.ACGas === true || state.ACChange === true || state.ACService === true) {
+            // console.warn(total)
+            setSum(total.reduce((a, b) => a + b, 0))
+            setModalVisible(!modalVisible)
 
         } else {
             showToastWithGravityError()
         }
     }
 
+    const display = (key) => {
+        if (key === 'ACGas') {
+            total.push(amount[0])
+            return (
+                <Text style={styles.amountText}>{amount[0]}</Text>
+            )
+        } else if (key === 'ACChange') {
+            total.push(amount[1])
+            return (
+                <Text style={styles.amountText}>{amount[1]}</Text>
+            )
+        } else if (key === 'ACService') {
+            total.push(amount[2])
+            return (
+                <Text style={styles.amountText}>{amount[2]}</Text>
+            )
+        }
+    }
+
     const clear = () => {
         setSum()
-        setCB0Value()
-        setCB1Value()
-        setCB2Value()
-        setIsChecked0(false)
-        setIsChecked1(false)
-        setIsChecked2(false)
-
-
-
+        total.splice(0, total.length)
+        setState(initialState)
     }
 
     useEffect(() => {
@@ -88,88 +113,111 @@ const ACCheckbox = () => {
 
     return (
         <View>
-            {/* <Text>AC</Text> */}
-            <View>
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked0(!isChecked0)
-                        if (isChecked0 === false) {
-                            setCB0Value(services[0].Charges)
-                            console.warn(cb0Value)
-                        } else if (isChecked0 === true) {
-                            setCB0Value('')
-                            console.warn(cb0Value)
-
-                        }
-                    }}
-                    isChecked={isChecked0}
-                    rightText={'AC Gas'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked1(!isChecked1)
-                        if (isChecked1 === false) {
-                            setCB1Value(services[1].Charges)
-                        } else if (isChecked1 === true) {
-                            setCB1Value('')
-                        }
-                    }}
-                    isChecked={isChecked1}
-                    rightText={'AC Change'}
-                />
-
-                <CheckBox
-                    style={{ padding: 10 }}
-                    rightTextStyle={{ fontSize: 20, color: 'black' }}
-                    checkBoxColor={'red'}
-                    checkedCheckBoxColor={'#05b545'}
-                    onClick={() => {
-                        setIsChecked2(!isChecked2)
-                        if (isChecked2 === false) {
-                            setCB2Value(services[2].Charges)
-                        } else if (isChecked2 === true) {
-                            setCB2Value('')
-                        }
-                    }}
-                    isChecked={isChecked2}
-                    rightText={'AC Service'}
-                />
-
-
-
-
-
-                {/* {
-                services.map((service, index) => {
-                    return (
-                        <View key={index}>
-                            <CheckBox
-                                rightTextStyle={{ fontSize: 20, color: 'black' }}
-                                checkBoxColor={'red'}
-                                checkedCheckBoxColor={'#05b545'}
-                                onClick={() => {
-                                    setIsChecked(
-                                        !isChecked
-                                    )
-                                }}
-                                isChecked={isChecked}
-                                rightText={service.Service}
-                            />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={styles.modalHeader}>
+                            <View><Text style={styles.modalText}>Bill</Text></View>
+                            <View style={{ padding: 10, alignItems: 'center' }}>
+                                <Text style={{ fontSize: 20 }}>Total Amount</Text>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>Rs {sum}</Text>
+                            </View>
                         </View>
-                    )
-                })
-            } */}
+
+                        <ScrollView style={{ flexDirection: 'row' }}>
+                            <View style={styles.resultContainer}>
+                                {Object.entries(state).map(([key, value]) => {
+                                    return (
+                                        value && (
+                                            <View key={key} style={{ paddingVertical: 10, flexDirection: 'row' }}>
+                                                <View style={{ width: WIDTH / 1.7 }}>
+                                                    <Text style={{ fontSize: 18, color: 'black' }}>{key}</Text>
+                                                </View>
+                                                <View style={{ width: WIDTH / 3.8, alignItems: 'center', justifyContent: 'center' }}>
+                                                    {
+                                                        display(key)
+                                                    }
+                                                </View>
+                                            </View>
+                                        )
+                                    );
+                                })}
+                            </View>
+
+                        </ScrollView >
+
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity style={styles.Button} onPress={() => {
+                                setModalVisible(false)
+                                navigation.navigate('HomeScreen')
+                            }}>
+                                <Text style={{ fontSize: 20, color: '#fff' }}>OK</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View >
+                </View >
+            </Modal >
+
+            <View>
+                <View style={{ padding: 8 }}>
+                    <View>
+                        <View>
+                            <View
+                                style={styles.checkboxWrapper}
+                            >
+                                <CheckBox
+                                    value={state.ACGas}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            ACGas: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>AC Gas</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.ACChange}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            ACChange: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>AC Change</Text>
+                            </View>
+
+                            <View style={styles.checkboxWrapper}>
+                                <CheckBox
+                                    value={state.ACService}
+                                    onValueChange={value =>
+                                        setState({
+                                            ...state,
+                                            ACService: value,
+                                        })
+                                    }
+                                />
+                                <Text style={styles.checkboxText}>AC Service</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
             </View>
-            <View style={{ flexDirection: 'row', marginTop: 280 }}>
+
+            <View style={{ flexDirection: 'row', marginTop: 270 }}>
                 <TouchableOpacity
                     style={styles.generateBill}
                     onPress={() => bill()}
@@ -194,7 +242,7 @@ const styles = StyleSheet.create({
     generateBill: {
         backgroundColor: 'dodgerblue',
         borderRadius: 10,
-        width: WIDTH / 2,
+        width: WIDTH / 2.5,
         height: WIDTH / 7,
         margin: 10,
         alignItems: 'center',
@@ -212,7 +260,7 @@ const styles = StyleSheet.create({
     clear: {
         backgroundColor: 'red',
         borderRadius: 10,
-        width: WIDTH / 3.5,
+        width: WIDTH / 2.5,
         height: WIDTH / 7,
         margin: 10,
         alignItems: 'center',
@@ -225,6 +273,89 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+    },
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: '#00000065'
+    },
+    modalView: {
+        margin: 10,
+        backgroundColor: "#ffffff",
+        borderRadius: 10,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 10,
+        width: WIDTH / 1.1,
+        height: '98%',
+        paddingBottom: 20
+    },
+
+    modalHeader: {
+        width: '100%',
+        height: HEIGHT / 4.2,
+        padding: 10,
+        backgroundColor: 'lavender'
+    },
+
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontSize: 30,
+        color: 'black'
+    },
+
+    amountText: {
+        fontSize: 18,
+        color: 'green',
+        fontWeight: 'bold',
+        textDecorationLine: 'underline'
+    },
+
+    Button: {
+        backgroundColor: 'dodgerblue',
+        width: WIDTH / 2,
+        height: WIDTH / 8,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+
+    resultContainer: {
+        padding: 20,
+        width: WIDTH
+    },
+    container: {
+
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    checkboxWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 6.5,
+    },
+
+    checkboxText: {
+        fontSize: 20,
+        color: 'black'
     }
 
 })
