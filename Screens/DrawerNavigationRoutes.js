@@ -9,6 +9,7 @@ import { DrawerContent } from './Components/DrawerContent'
 import HomeScreen from './drawerScreens/HomeScreen';
 import TodosScreen from './TODOS'
 import ServicesScreen from './ServicesScreen'
+import PendingScreen from './Components/Pending'
 
 
 const Stack = createStackNavigator();
@@ -25,7 +26,7 @@ const DrawerNavigatorRoutes = () => {
                 <Drawer.Screen name="HomeScreen" component={HomeScreen} />
                 <Drawer.Screen name="TodosScreen" component={TodosScreen} />
                 <Drawer.Screen name="ServicesScreen" component={ServicesScreen} />
-
+                <Drawer.Screen name="PendingScreen" component={PendingScreen} />
 
             </Drawer.Navigator>
 

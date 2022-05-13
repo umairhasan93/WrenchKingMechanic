@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/native';
 import Home from '../drawerScreens/HomeScreen'
+import deepFreezeAndThrowOnMutationInDev from 'react-native/Libraries/Utilities/deepFreezeAndThrowOnMutationInDev';
 
 
 const API = REACT_NATIVE_APP_API_KEY
@@ -28,11 +29,31 @@ const AxleCheckbox = (props) => {
     const navigation = useNavigation()
 
     const id = props.mechanicId
+    const username = props.username
+    const usernumber = props.usernumber
+    const mechanicname = props.mechanicname
+    const mechanicnumber = props.mechanicnumber
+    const idd = props.idd
 
+
+    console.log(id)
+    console.log(username)
+    console.log(usernumber)
+    console.log(mechanicname)
+    console.log(mechanicnumber)
+    console.log(idd)
 
     const showToastWithGravityError = () => {
         ToastAndroid.showWithGravity(
             'None of The Service is Selected',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+        );
+    };
+
+    const showSuccessToastWithGravity = () => {
+        ToastAndroid.showWithGravity(
+            'Service Completed',
             ToastAndroid.LONG,
             ToastAndroid.CENTER
         );
@@ -121,6 +142,65 @@ const AxleCheckbox = (props) => {
         setState(initialState)
     }
 
+    const confirmBill = () => {
+
+        const data = {
+            User_Name: username,
+            User_Number: usernumber,
+            Mechanic_Name: mechanicname,
+            Mechanic_Number: mechanicnumber,
+            Service: id,
+            Total_Amount: sum
+        }
+
+        let url = `${API}bill/generateBill`
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                Accept: 'application/json',
+                //Header Defination
+                'Content-Type':
+                    'application/json',
+            },
+        })
+
+            .then((response) => response.json())
+            .then((responseJson) => {
+                if (responseJson) {
+                    showSuccessToastWithGravity()
+                    let url1 = `${API}confirmedbooking/`
+                    console.log(url1 + idd)
+                    fetch(url1 + idd, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            Status: 'Completed'
+                        }),
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                        },
+                    })
+
+                        .then((response) => response.json())
+                        .then((json) => {
+                            // console.log(json)
+                        })
+                        .catch(err => {
+                            console.log({ err });
+                        })
+                    setState(initialState)
+                    navigation.navigate('HomeScreen')
+                }
+
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        setModalVisible(false)
+        navigation.navigate('HomeScreen')
+    }
+
     useEffect(() => {
 
         // AsyncStorage.getItem('mechanic').then(data => {
@@ -140,7 +220,7 @@ const AxleCheckbox = (props) => {
     }, [])
 
     return (
-        <View>
+        <View style={{ paddingLeft: 8 }}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -183,10 +263,7 @@ const AxleCheckbox = (props) => {
                         </ScrollView >
 
                         <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity style={styles.Button} onPress={() => {
-                                setModalVisible(false)
-                                navigation.navigate('HomeScreen')
-                            }}>
+                            <TouchableOpacity style={styles.Button} onPress={() => confirmBill()}>
                                 <Text style={{ fontSize: 20, color: '#fff' }}>OK</Text>
                             </TouchableOpacity>
                         </View>
@@ -194,6 +271,7 @@ const AxleCheckbox = (props) => {
                     </View >
                 </View >
             </Modal >
+
             <View>
                 <View style={{ padding: 8 }}>
                     <View>
@@ -299,19 +377,20 @@ const AxleCheckbox = (props) => {
 
 
             </View>
+
             <View style={{ flexDirection: 'row', marginTop: 94 }}>
                 <TouchableOpacity
                     style={styles.generateBill}
                     onPress={() => bill()}
                 >
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>Generate Bill</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>Generate Bill</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.clear}
                     onPress={() => clear()}
                 >
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>Clear</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>Clear</Text>
                 </TouchableOpacity>
             </View>
 
@@ -432,7 +511,7 @@ const styles = StyleSheet.create({
     checkboxWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 6,
+        paddingVertical: 7,
     },
 
     checkboxText: {

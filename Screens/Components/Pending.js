@@ -15,18 +15,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-community/async-storage'
 import { REACT_NATIVE_APP_API_KEY } from '@env'
+import MenuButton from '../Components/NavigationDrawerHeader'
 
 const API = REACT_NATIVE_APP_API_KEY
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
-export default Pending = (props) => {
+export default Pending = ({ navigation, route }) => {
 
 
 
-    const id = props.mechanicId
-
+    const id = route.params
+    const i = id.number
     const showToastWithGravity = () => {
         ToastAndroid.showWithGravity(
             'Booking Confirmed',
@@ -57,7 +58,8 @@ export default Pending = (props) => {
 
     // const [isPressed, setIsPressed] = useState(false)
     const [bookings, setBookings] = useState([])
-    const [modalVisible, setModalVisible] = useState(true);
+    const [confirmedBooking, setConfirmedBooking] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
     const [identifier, setIdentifier] = useState('')
     const [username, setUsername] = useState('')
     const [usernumber, setUsernumber] = useState('')
@@ -72,30 +74,58 @@ export default Pending = (props) => {
     const [bookingdate, setBookingdate] = useState('')
     const [requesteddate, setRequesteddate] = useState('')
     const [type, setType] = useState('')
+    const [time, setTime] = useState()
+    const [chkDate, setChkDate] = useState('')
 
 
 
-    console.log(id)
+    // console.log(i)
 
     useEffect(() => {
         let url = `${API}booking/mechanicPendingBooking/`
-        // console.log(url)
-        fetch(url + id)
+        console.log(i.id)
+        fetch(url + i.id)
             .then(resp => resp.json())
             .then(resp => setBookings(resp))
             .catch((error) => console.error(error))
 
-        // let url1 = `${API}bookingToday/`
-        // fetch(url1 + id)
-        //     .then(resp => resp.json())
-        //     .then(resp => setB(resp))
-        //     .catch((error) => console.error(error))
+        let url1 = `${API}confirmedbooking`
+        fetch(url1)
+            .then(resp => resp.json())
+            .then(resp => setConfirmedBooking(resp))
+            .catch((error) => console.error(error))
 
     }, [])
 
+    const TimeSelection = () => {
+        setTime()
+        if (state.Das === true) {
+            setTime('10:00')
+            console.warn(time)
+        } if (state.Bara === true) {
+            setTime('12:00')
+            console.warn(time)
+
+        } if (state.Do === true) {
+            setTime("02:00")
+            console.warn(time)
+
+        } if (state.Char === true) {
+            setTime("04:00")
+            console.warn(time)
+
+        } if (state.Che === true) {
+            setTime("06:00")
+            console.warn(time)
+
+        }
+
+    }
 
     const confirm = () => {
         if (state.Das === true || state.Bara === true || state.Do === true || state.Char === true || state.Che === true) {
+            TimeSelection()
+            console.warn(time)
             setModalVisible(!modalVisible)
         } else {
             showToastWithGravityError()
@@ -165,261 +195,306 @@ export default Pending = (props) => {
         }
     }
 
+    const timeDisplay = () => {
+        for (var i = 0; i < confirmedBooking.length; i++) {
+            return (
+                <View>
+                    {/* <Text>{chkDate}</Text> */}
+                    {/* <Text>{confirmedBooking[i].Requested_Date}</Text> */}
+                    {/* <Text>{confirmedBooking[j].Time_Of_Service}</Text> */}
+
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={styles.checkboxWrapper}>
+                            <CheckBox
+                                disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "10:00") ? true : false}
+                                value={state.Das}
+                                onValueChange={value =>
+                                    setState({
+
+                                        Das: value,
+                                    })
+                                }
+                            />
+                            <Text style={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "10:00") ? styles.disabledcheckboxText : styles.checkboxText}>10:00</Text>
+                        </View>
+
+                        <View style={styles.checkboxWrapper}>
+                            <CheckBox
+                                disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "12:00") ? true : false}
+                                value={state.Bara}
+                                onValueChange={value =>
+                                    setState({
+
+                                        Bara: value,
+                                    })
+                                }
+                            />
+                            <Text style={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "12:00") ? styles.disabledcheckboxText : styles.checkboxText}>12:00</Text>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={styles.checkboxWrapper}>
+                            <CheckBox
+                                disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "02:00") ? true : false}
+                                value={state.Do}
+                                onValueChange={value =>
+                                    setState({
+
+                                        Do: value,
+                                    })
+                                }
+                            />
+                            <Text style={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "02:00") ? styles.disabledcheckboxText : styles.checkboxText}>02:00</Text>
+                        </View>
+
+                        <View style={styles.checkboxWrapper}>
+                            <CheckBox
+                                disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "04:00") ? true : false}
+                                value={state.Char}
+                                onValueChange={value =>
+                                    setState({
+
+                                        Char: value,
+                                    })
+                                }
+                            />
+                            <Text style={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "04:00") ? styles.disabledcheckboxText : styles.checkboxText}>04:00</Text>
+                        </View>
+                    </View>
+                    <View style={styles.checkboxWrapper}>
+                        <CheckBox
+                            disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "06:00") ? true : false}
+                            value={state.Che}
+                            onValueChange={value =>
+                                setState({
+
+                                    Che: value,
+                                })
+                            }
+                        />
+                        <Text style={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "06:00") ? styles.disabledcheckboxText : styles.checkboxText}>06:00</Text>
+                    </View>
+                </View>
+            )
+
+        }
+
+
+    }
+
 
     return (
 
         <View style={styles.page}>
-            <ScrollView>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                        setModalVisible(!modalVisible);
-                    }}
+            <View style={{
+                flexDirection: 'row',
+                backgroundColor: '#E41B17',
+                borderBottomRightRadius: 20,
+                borderTopLeftRadius: 20,
+                height: 50,
+                paddingTop: 6,
+                shadowColor: '#000000',
+                shadowOffset: {
+                    width: 0,
+                    height: 5,
+                },
+                shadowOpacity: 10,
+                shadowRadius: 10,
+                elevation: 10,
+            }}>
+                <MenuButton onPress={() => navigation.openDrawer()} />
+                <Text style={styles.headerText}>Wrench King</Text>
+                <TouchableOpacity
+                    style={{ marginLeft: 80, justifyContent: "center" }}
+                    onPress={() => navigation.navigate('HomeScreen')}
                 >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <View style={styles.modalHeader}>
-                                <View><Text style={styles.modalText}>Select Time</Text></View>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setModalVisible(false)
+                    <Icon
+                        name="chevron-left"
+                        size={25}
+                        color="#fff"
+                    />
+                </TouchableOpacity>
+            </View>
 
-                                    }}
-                                    style={{ marginRight: -55, marginTop: -13 }}
-                                >
-                                    <Icon
-                                        name="times"
-                                        color="red"
-                                        size={25}
+            <View style={{ padding: 10, alignItems: 'center' }}>
+                <ScrollView>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <View style={styles.modalHeader}>
+                                    <View><Text style={styles.modalText}>Select Time</Text></View>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setModalVisible(false)
 
-                                    />
-                                </TouchableOpacity>
-                            </View>
+                                        }}
+                                        style={{ marginRight: -55, marginTop: -13 }}
+                                    >
+                                        <Icon
+                                            name="times"
+                                            color="red"
+                                            size={25}
 
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={styles.checkboxWrapper}>
-                                    <CheckBox
-                                        value={state.Das}
-                                        onValueChange={value =>
-                                            setState({
-                                                ...state,
-                                                Das: value,
-                                            })
-                                        }
-                                    />
-                                    <Text style={styles.checkboxText}>10:00</Text>
+                                        />
+                                    </TouchableOpacity>
                                 </View>
 
-                                <View style={styles.checkboxWrapper}>
-                                    <CheckBox
-                                        value={state.Bara}
-                                        onValueChange={value =>
-                                            setState({
-                                                ...state,
-                                                Bara: value,
-                                            })
-                                        }
-                                    />
-                                    <Text style={styles.checkboxText}>12:00</Text>
-                                </View>
-                            </View>
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={styles.checkboxWrapper}>
-                                    <CheckBox
-                                        value={state.Do}
-                                        onValueChange={value =>
-                                            setState({
-                                                ...state,
-                                                Do: value,
-                                            })
-                                        }
-                                    />
-                                    <Text style={styles.checkboxText}>02:00</Text>
+                                {
+                                    timeDisplay()
+                                }
+
+
+
+                                <View style={styles.buttonView}>
+                                    <TouchableOpacity
+                                        style={styles.buttonContainer}
+                                        onPress={confirm}
+                                    >
+                                        <Text style={styles.buttonText}>Confirm</Text>
+                                    </TouchableOpacity>
                                 </View>
 
-                                <View style={styles.checkboxWrapper}>
-                                    <CheckBox
-                                        value={state.Char}
-                                        onValueChange={value =>
-                                            setState({
-                                                ...state,
-                                                Char: value,
-                                            })
-                                        }
-                                    />
-                                    <Text style={styles.checkboxText}>04:00</Text>
-                                </View>
                             </View>
-                            <View style={styles.checkboxWrapper}>
-                                <CheckBox
-                                    value={state.Che}
-                                    onValueChange={value =>
-                                        setState({
-                                            ...state,
-                                            Che: value,
-                                        })
-                                    }
-                                />
-                                <Text style={styles.checkboxText}>06:00</Text>
-                            </View>
-
-
-
-                            <View style={styles.buttonView}>
-                                <TouchableOpacity
-                                    style={styles.buttonContainer}
-                                    onPress={confirm}
-                                >
-                                    <Text style={styles.buttonText}>Confirm</Text>
-                                </TouchableOpacity>
-                            </View>
-
                         </View>
-                    </View>
-                </Modal >
-                {
-                    bookings.map((booking, index) => {
-                        return (
-                            <Card key={index} style={styles.card}>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={{ flexDirection: 'row', width: WIDTH }}>
-                                        <TouchableOpacity
-                                            style={styles.timeIcon}
-                                            onPress={() => {
-                                                setModalVisible(true)
-                                                setIdentifier(booking._id)
-                                            }}
-                                            activeOpacity={0.6}
-                                        >
-                                            <Ionicons
-                                                name="time-outline"
-                                                size={30}
-                                                color='#fff'
-                                            />
-                                        </TouchableOpacity>
-                                        <View style={{ width: 163, alignItems: 'center', marginLeft: 35, marginRight: 30 }}>
-                                            <Text style={styles.nameText}>{booking.User_Name}</Text>
-                                        </View>
-
-                                        {/* <TouchableOpacity style={styles.listIcon}>
-                                            <Icon
-                                                name="tasks"
-                                                size={24}
-                                                color='#fff'
-                                            />
-                                        </TouchableOpacity> */}
-
-                                        {/* <View style={{ width: WIDTH / 4.5, backgroundColor: '#F9DB24', marginRight: -(WIDTH / 3.6), alignItems: 'center', justifyContent: 'center', borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}>
-                                            <Text style={{ fontSize: 14, marginBottom: 2, fontWeight: 'bold', color: 'black' }}>{booking.Status}</Text>
-                                        </View> */}
-
-                                    </View>
-
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View>
-                                            <Text style={{ fontSize: 15 }}>Service:</Text>
-                                        </View>
-                                        <View style={{ marginLeft: 4 }}>
-                                            <Text style={{ color: 'red', textDecorationLine: 'underline', fontSize: 15 }}>{booking.Mechanic_Speciality}</Text>
-                                        </View>
-                                    </View>
-                                </View>
-
-                                <View style={{ flexDirection: 'row', marginTop: 30 }}>
-                                    <View style={{ width: 160, alignItems: 'center' }}>
-                                        <View>
-                                            <Text style={{ fontSize: 15, color: 'black', fontWeight: 'bold' }}>{booking.Requested_Date}</Text>
-                                        </View>
-                                        <View style={{ marginTop: 2 }}>
-                                            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Requested Date</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={{ width: 160, alignItems: 'center' }}>
-                                        <View>
-                                            <Text style={{ fontSize: 15, color: 'black' }}>{booking.Booking_Date}</Text>
-                                        </View>
-                                        <View style={{ marginTop: 2 }}>
-                                            <Text style={{ fontSize: 14 }}>Date of Appointment</Text>
-                                        </View>
-
-                                    </View>
-                                </View>
-                                <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'center' }}>
-
-                                    <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: '#ff000095',
-                                                height: HEIGHT / 20,
-                                                width: WIDTH / 4,
-                                                borderRadius: 30,
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                flexDirection: 'row'
-                                            }}
-                                        >
-                                            <Icon
-                                                name='times'
-                                                size={16}
-                                                style={{
-                                                    marginLeft: -10,
-                                                    marginRight: 4
+                    </Modal >
+                    {
+                        bookings.map((booking, index) => {
+                            return (
+                                <Card key={index} style={styles.card}>
+                                    <View style={{ alignItems: 'center' }}>
+                                        <View style={{ flexDirection: 'row', width: WIDTH }}>
+                                            <TouchableOpacity
+                                                style={styles.timeIcon}
+                                                onPress={() => {
+                                                    setModalVisible(true)
+                                                    setIdentifier(booking._id)
+                                                    setChkDate(booking.Requested_Date)
                                                 }}
-                                            />
-                                            <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Cancel</Text>
-                                        </TouchableOpacity>
+                                                activeOpacity={0.6}
+                                            >
+                                                <Ionicons
+                                                    name="time-outline"
+                                                    size={30}
+                                                    color='#fff'
+                                                />
+                                            </TouchableOpacity>
+                                            <View style={{ width: 163, alignItems: 'center', marginLeft: 35, marginRight: 30 }}>
+                                                <Text style={styles.nameText}>{booking.User_Name}</Text>
+                                            </View>
+
+                                        </View>
+
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <View>
+                                                <Text style={{ fontSize: 15 }}>Service:</Text>
+                                            </View>
+                                            <View style={{ marginLeft: 4 }}>
+                                                <Text style={{ color: 'red', textDecorationLine: 'underline', fontSize: 15 }}>{booking.Mechanic_Speciality}</Text>
+                                            </View>
+                                        </View>
                                     </View>
 
-                                    <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setIdentifier(booking._id)
-                                                setUsername(booking.User_Name)
-                                                setUsernumber(booking.User_Number)
-                                                setUseremail(booking.User_Email)
-                                                setCarcompany(booking.Car_Company)
-                                                setModel(booking.Model)
-                                                setModelyear(booking.Model_Year)
-                                                setMechanicname(booking.Mechanic_Name)
-                                                setMechanicnumber(booking.Mechanic_Number)
-                                                setMechanicaddress(booking.Mechanic_Address)
-                                                setMechanicspeciality(booking.Mechanic_Speciality)
-                                                setBookingdate(booking.Booking_Date)
-                                                setRequesteddate(booking.Requested_Date)
-                                                setType(booking.Type)
-                                                Accept()
-                                            }}
-                                            style={{
-                                                backgroundColor: '#12AD2B',
-                                                height: HEIGHT / 20,
-                                                width: WIDTH / 4,
-                                                borderRadius: 30,
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                flexDirection: 'row'
-                                            }}
-                                        >
-                                            <Icon
-                                                name='check'
-                                                size={16}
-                                                style={{
-                                                    marginLeft: -10,
-                                                    marginRight: 4
-                                                }}
-                                            />
-                                            <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Accept</Text>
-                                        </TouchableOpacity>
+                                    <View style={{ flexDirection: 'row', marginTop: 30 }}>
+                                        <View style={{ width: 160, alignItems: 'center' }}>
+                                            <View>
+                                                <Text style={{ fontSize: 15, color: 'black', fontWeight: 'bold' }}>{booking.Requested_Date}</Text>
+                                            </View>
+                                            <View style={{ marginTop: 2 }}>
+                                                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Requested Date</Text>
+                                            </View>
+                                        </View>
+
+                                        <View style={{ width: 160, alignItems: 'center' }}>
+                                            <View>
+                                                <Text style={{ fontSize: 15, color: 'black' }}>{booking.Booking_Date}</Text>
+                                            </View>
+                                            <View style={{ marginTop: 2 }}>
+                                                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Date of Appointment</Text>
+                                            </View>
+
+                                        </View>
                                     </View>
-                                </View>
-                            </Card>
-                        )
-                    })
-                }
-            </ScrollView>
+                                    <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'center' }}>
+
+                                        <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
+                                            <TouchableOpacity
+                                                style={{
+                                                    backgroundColor: '#ff000095',
+                                                    height: HEIGHT / 20,
+                                                    width: WIDTH / 4,
+                                                    borderRadius: 30,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'row'
+                                                }}
+                                            >
+                                                <Icon
+                                                    name='times'
+                                                    size={16}
+                                                    style={{
+                                                        marginLeft: -10,
+                                                        marginRight: 4
+                                                    }}
+                                                />
+                                                <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Cancel</Text>
+                                            </TouchableOpacity>
+                                        </View>
+
+                                        <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setIdentifier(booking._id)
+                                                    setUsername(booking.User_Name)
+                                                    setUsernumber(booking.User_Number)
+                                                    setUseremail(booking.User_Email)
+                                                    setCarcompany(booking.Car_Company)
+                                                    setModel(booking.Model)
+                                                    setModelyear(booking.Model_Year)
+                                                    setMechanicname(booking.Mechanic_Name)
+                                                    setMechanicnumber(booking.Mechanic_Number)
+                                                    setMechanicaddress(booking.Mechanic_Address)
+                                                    setMechanicspeciality(booking.Mechanic_Speciality)
+                                                    setBookingdate(booking.Booking_Date)
+                                                    setRequesteddate(booking.Requested_Date)
+                                                    setType(booking.Type)
+                                                    Accept()
+                                                }}
+                                                style={{
+                                                    backgroundColor: '#12AD2B',
+                                                    height: HEIGHT / 20,
+                                                    width: WIDTH / 4,
+                                                    borderRadius: 30,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'row'
+                                                }}
+                                            >
+                                                <Icon
+                                                    name='check'
+                                                    size={16}
+                                                    style={{
+                                                        marginLeft: -10,
+                                                        marginRight: 4
+                                                    }}
+                                                />
+                                                <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Accept</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </Card>
+                            )
+                        })
+                    }
+                </ScrollView>
+            </View>
         </View >
 
     )
@@ -429,9 +504,18 @@ const styles = StyleSheet.create({
 
     page: {
         flex: 1,
-        alignItems: 'center',
-        padding: 10,
+        // alignItems: 'center',
+        // padding: 10,
         // backgroundColor: ''
+    },
+
+    headerText: {
+        fontSize: 24,
+        alignItems: "center",
+        marginLeft: 60,
+        marginTop: 2,
+        color: 'white',
+        fontWeight: 'bold',
     },
 
     card: {
@@ -611,6 +695,11 @@ const styles = StyleSheet.create({
     checkboxText: {
         fontSize: 20,
         color: 'black'
+    },
+
+    disabledcheckboxText: {
+        fontSize: 20,
+        color: '#C2C1C1'
     }
 
 })

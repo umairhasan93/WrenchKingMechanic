@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import CheckBox from 'react-native-check-box'
 import { Card } from 'react-native-paper';
 import { REACT_NATIVE_APP_API_KEY } from '@env'
+import MenuButton from '../Components/NavigationDrawerHeader'
 
 import AxleCheckbox from '../Components/AxleCheckbox'
 import TuningCheckbox from '../Components/TuningCheckBox'
@@ -23,9 +24,9 @@ const API = REACT_NATIVE_APP_API_KEY
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
-const Services = () => {
+const Services = ({ navigation, route }) => {
 
-
+    const { username, usernumber, mechanicname, mechanicnumber, idd } = route.params
     const [isChecked, setIsChecked] = useState(false)
 
     const [services, setServices] = useState([])
@@ -35,7 +36,7 @@ const Services = () => {
     const [charges, setCharges] = useState([])
 
     const id = mechanic.speciality
-    // console.log(id)
+    // console.log(idd)
     // console.log(services)
 
     useEffect(() => {
@@ -61,21 +62,61 @@ const Services = () => {
         // console.warn(id)
         if (id === 'Axle') {
             return (
-                <AxleCheckbox mechanicId={id} />
+                <AxleCheckbox
+                    mechanicId={id}
+                    username={username}
+                    usernumber={usernumber}
+                    mechanicname={mechanicname}
+                    mechanicnumber={mechanicnumber}
+                    idd={idd}
+                />
             )
         } else if (id === 'Tuning') {
             return (
-                <TuningCheckbox mechanicId={id} />
+                <TuningCheckbox
+                    mechanicId={id}
+                    usern={username}
+                    usernum={usernumber}
+                    mechanicn={mechanicname}
+                    mechanicnum={mechanicnumber}
+                    idd={idd}
+                />
             )
         } else if (id === 'AC') {
             return (
-                <ACCheckbox mechanicId={id} />
+                <ACCheckbox
+                    mechanicId={id}
+                    usern={username}
+                    usernum={usernumber}
+                    mechanicn={mechanicname}
+                    mechanicnum={mechanicnumber}
+                    idd={idd}
+                />
             )
         }
     }
 
     return (
         <View style={styles.page}>
+            <View style={{
+                flexDirection: 'row',
+                backgroundColor: '#E41B17',
+                borderBottomRightRadius: 20,
+                borderTopLeftRadius: 20,
+                height: 50,
+                paddingTop: 6,
+                shadowColor: '#000000',
+                shadowOffset: {
+                    width: 0,
+                    height: 5,
+                },
+                shadowOpacity: 10,
+                shadowRadius: 10,
+                elevation: 10,
+            }}>
+                <MenuButton onPress={() => navigation.openDrawer()} />
+                <Text style={styles.headerText}>Wrench King</Text>
+            </View>
             <View style={styles.heading}>
                 <Text style={{
                     fontSize: 24,
@@ -100,7 +141,16 @@ const styles = StyleSheet.create({
 
     page: {
         flex: 1,
-        padding: 10
+        // padding: 10
+    },
+
+    headerText: {
+        fontSize: 24,
+        alignItems: "center",
+        marginLeft: 60,
+        marginTop: 2,
+        color: 'white',
+        fontWeight: 'bold',
     },
 
     heading: {

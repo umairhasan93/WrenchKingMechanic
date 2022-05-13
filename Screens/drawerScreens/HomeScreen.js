@@ -78,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'lavender' }}>
             {loading()}
             <View style={{
                 flexDirection: 'row',
@@ -101,9 +101,49 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             <View style={{ flex: 1 }}>
-                {display()}
+                {/* {display()}
 
-                {/* <Services mechanicId={id} /> */}
+                <Services mechanicId={id} /> */}
+                <TouchableOpacity onPress={() => navigation.navigate('PendingScreen', {
+                    number: { id }
+                })}>
+                    <Card style={styles.card}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View>
+                                <Icon
+                                    name='chevron-right'
+                                    size={25}
+                                    color='red'
+                                />
+                            </View>
+                            <View style={{ alignItems: 'center', marginTop: -2, marginLeft: 10 }}>
+                                <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold' }}>PENDING REQUEST</Text>
+                            </View>
+                            <View style={styles.pendingNumbers}>
+                                <Text style={styles.pendingNumbersText}>{bookings.length}</Text>
+                            </View>
+                        </View>
+                    </Card>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate('TodosScreen', { number: id })}>
+                    <Card style={styles.card}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View>
+                                <Icon
+                                    name='chevron-right'
+                                    size={25}
+                                    color='red'
+                                />
+                            </View>
+                            <View style={{ alignItems: 'center', marginTop: -2, marginLeft: 10 }}>
+                                <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold' }}>TODOS</Text>
+                            </View>
+                        </View>
+                    </Card>
+                </TouchableOpacity>
+
+
             </View>
 
 
@@ -122,6 +162,31 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+    card: {
+        height: HEIGHT / 10,
+        width: WIDTH / 1.05,
+        marginTop: 30,
+        borderBottomRightRadius: 20,
+        borderTopRightRadius: 20,
+        paddingTop: 20,
+        paddingLeft: 15
+    },
+
+    pendingNumbers: {
+        backgroundColor: 'red',
+        height: 35,
+        width: 35,
+        borderRadius: 17,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 120,
+        marginTop: -30
+    },
+
+    pendingNumbersText: {
+        color: 'white',
+        fontSize: 16
+    },
 
 
 })

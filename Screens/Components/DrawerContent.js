@@ -75,7 +75,7 @@ export function DrawerContent(props) {
                         activeOpacity={0.6}
                         style={styles.drawerItemContainer}
                         onPress={() => navigation.navigate("TodosScreen",
-                            { id: localUser.contactNo }
+                            { number: localUser.contactNo }
                         )}
                     >
                         <View>
@@ -91,24 +91,7 @@ export function DrawerContent(props) {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        activeOpacity={0.6}
-                        style={styles.drawerItemContainer}
-                        onPress={() => navigation.navigate('ComplainScreen',
-                            { username: name, useremail: email }
-                        )}
-                    >
-                        <View>
-                            <Icon
-                                name='at'
-                                size={18}
-                                style={styles.icon}
-                            />
-                        </View>
-                        <View style={{ marginLeft: WIDTH / 31 }}>
-                            <Text style={styles.text}>Contact Us</Text>
-                        </View>
-                    </TouchableOpacity>
+
                 </View>
 
 

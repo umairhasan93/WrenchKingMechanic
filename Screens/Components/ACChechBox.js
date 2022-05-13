@@ -92,6 +92,65 @@ const ACCheckbox = (props) => {
         setState(initialState)
     }
 
+    const confirmBill = () => {
+
+        const data = {
+            User_Name: username,
+            User_Number: usernumber,
+            Mechanic_Name: mechanicname,
+            Mechanic_Number: mechanicnumber,
+            Service: id,
+            Total_Amount: sum
+        }
+
+        let url = `${API}bill/generateBill`
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                Accept: 'application/json',
+                //Header Defination
+                'Content-Type':
+                    'application/json',
+            },
+        })
+
+            .then((response) => response.json())
+            .then((responseJson) => {
+                if (responseJson) {
+                    showSuccessToastWithGravity()
+                    let url1 = `${API}confirmedbooking/`
+                    console.log(url1 + idd)
+                    fetch(url1 + idd, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            Status: 'Completed'
+                        }),
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                        },
+                    })
+
+                        .then((response) => response.json())
+                        .then((json) => {
+                            // console.log(json)
+                        })
+                        .catch(err => {
+                            console.log({ err });
+                        })
+                    setState(initialState)
+                    navigation.navigate('HomeScreen')
+                }
+
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        setModalVisible(false)
+        navigation.navigate('HomeScreen')
+    }
+
     useEffect(() => {
 
         AsyncStorage.getItem('mechanic').then(data => {
@@ -112,7 +171,7 @@ const ACCheckbox = (props) => {
 
 
     return (
-        <View>
+        <View style={{ paddingLeft: 8 }}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -156,10 +215,7 @@ const ACCheckbox = (props) => {
 
 
                         <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity style={styles.Button} onPress={() => {
-                                setModalVisible(false)
-                                navigation.navigate('HomeScreen')
-                            }}>
+                            <TouchableOpacity style={styles.Button} onPress={() => confirmBill()}>
                                 <Text style={{ fontSize: 20, color: '#fff' }}>OK</Text>
                             </TouchableOpacity>
                         </View>
@@ -222,14 +278,14 @@ const ACCheckbox = (props) => {
                     style={styles.generateBill}
                     onPress={() => bill()}
                 >
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>Generate Bill</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>Generate Bill</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.clear}
                     onPress={() => clear()}
                 >
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>Clear</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>Clear</Text>
                 </TouchableOpacity>
             </View>
 
@@ -347,10 +403,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
+
     checkboxWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 6.5,
+        paddingVertical: 8,
     },
 
     checkboxText: {

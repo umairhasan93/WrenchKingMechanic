@@ -36,22 +36,22 @@ const Tomorrow = (props) => {
     }, [])
 
     return (
-        <View>
+        <View style={{ marginTop: 70 }}>
             {
                 (todays.length > 0) ? (
                     todays.map((today, index) => {
                         return (
                             <Card key={index} style={styles.card}>
                                 <View style={styles.row}>
-                                    <View style={{ flex: 0.45, justifyContent: 'center', backgroundColor: '#00000030', borderRadius: 30 }}>
-                                        <Text style={{ alignSelf: 'center', fontSize: 16, color: '#000' }}>{index + 1}</Text>
+                                    <View style={{ flex: 0.35, justifyContent: 'center', backgroundColor: '#00000030', borderRadius: 30 }}>
+                                        <Text style={{ alignSelf: 'center', fontSize: 16, color: '#000' }}>{index + 1}.</Text>
                                     </View>
                                     <View style={{ flex: 2, justifyContent: 'center' }}>
                                         <Text style={styles.name}>{today.User_Name}</Text>
                                         <Text style={styles.name}>{today.Model} ({today.Model_Year})</Text>
                                     </View>
 
-                                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                                    {/* <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                                         {
                                             (index === 0) ? (
                                                 <TouchableOpacity
@@ -62,7 +62,7 @@ const Tomorrow = (props) => {
                                                 </TouchableOpacity>
                                             ) : null
                                         }
-                                    </View>
+                                    </View> */}
                                 </View>
                             </Card>
                         )
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: 'yellow',
     },
 
     row: {
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
 
     noBookingTextView: {
-        marginTop: 170,
+        marginTop: 270,
         alignItems: 'center'
     },
 
