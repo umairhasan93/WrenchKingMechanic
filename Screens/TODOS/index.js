@@ -18,6 +18,7 @@ import Today from '../Components/Today'
 import Tomorrow from '../Components/Tomorrow'
 
 const API = REACT_NATIVE_APP_API_KEY
+// console.log(API)
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
@@ -78,7 +79,7 @@ const Todos = ({ navigation, route }) => {
             <View style={styles.displayBookings}>
                 <ScrollView>
                     {
-                        value === 'Today' ? <Today mechanicId={i} /> : (<Tomorrow mechanicId={i} />)
+                        value === 'Today' ? <Today mechanicId={i} /> : <Tomorrow mechanicId={i} />
                     }
                 </ScrollView>
             </View>

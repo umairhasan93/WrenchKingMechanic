@@ -13,6 +13,7 @@ import { Card } from 'react-native-paper';
 import { REACT_NATIVE_APP_API_KEY } from '@env'
 
 const API = REACT_NATIVE_APP_API_KEY
+console.log(API)
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
@@ -21,6 +22,7 @@ const Tomorrow = (props) => {
 
     const id = props.mechanicId
     const [todays, setTodays] = useState([])
+    console.log(todays)
 
     useEffect(() => {
         let url = `${API}confirmedbooking/bookingTomorrow/`
@@ -33,7 +35,7 @@ const Tomorrow = (props) => {
             })
             .catch((error) => console.error(error))
 
-    }, [])
+    }, [todays])
 
     return (
         <View style={{ marginTop: 70 }}>
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     },
 
     noBookingTextView: {
-        marginTop: 270,
+        marginTop: 200,
         alignItems: 'center'
     },
 

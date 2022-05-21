@@ -21,6 +21,7 @@ import Todos from '../TODOS'
 import Services from '../ServicesScreen'
 
 const API = REACT_NATIVE_APP_API_KEY
+// console.log(REACT_NATIVE_APP_API_KEY)
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
@@ -42,7 +43,9 @@ const HomeScreen = ({ navigation }) => {
 
     const loading = () => {
         if (bookings.length > 0) {
-            LocalNotification()
+            for (var i = 0; i <= bookings.length; i++) {
+                LocalNotification()
+            }
         }
 
     }
@@ -68,12 +71,15 @@ const HomeScreen = ({ navigation }) => {
         })
 
         let url = `${API}booking/mechanicPendingBooking/`
+        console.log(url)
+        // console.log(url + id)
+
         fetch(url + id)
             .then(resp => resp.json())
             .then(resp => setBookings(resp))
             .catch((error) => console.error(error))
 
-    }, [])
+    }, [bookings])
 
 
 

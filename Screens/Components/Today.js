@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const API = REACT_NATIVE_APP_API_KEY
+console.log(API)
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
@@ -26,10 +27,10 @@ const Today = (props) => {
 
     const id = props.mechanicId
     const [todays, setTodays] = useState([])
-
+    console.log(todays)
     useEffect(() => {
         let url = `${API}confirmedbooking/bookingToday/`
-        console.log(id)
+        console.log(url)
         fetch(url + id)
             .then(resp => resp.json())
             .then(resp => {
@@ -38,7 +39,7 @@ const Today = (props) => {
             })
             .catch((error) => console.error(error))
 
-    }, [])
+    }, [todays])
 
     const displayButton = () => {
         return (
@@ -80,9 +81,17 @@ const Today = (props) => {
                                                         onPress={() => navigation.navigate('ServicesScreen', {
                                                             username: today.User_Name,
                                                             usernumber: today.User_Number,
+                                                            useremail: today.User_Email,
+                                                            carcompany: today.Car_Company,
+                                                            model: today.Model,
+                                                            modelyear: today.Model_Year,
                                                             mechanicname: today.Mechanic_Name,
                                                             mechanicnumber: today.Mechanic_Number,
-                                                            idd: today._id
+                                                            mechanicaddress: today.Mechanic_Address,
+                                                            mechanicspeciality: today.Mechanic_Speciality,
+                                                            mechanictype: today.Mechanic_Type,
+                                                            idd: today._id,
+
                                                         })}
                                                     >
                                                         <Text style={styles.buttonText}>Start</Text>

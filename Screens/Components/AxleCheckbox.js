@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/native';
 import Home from '../drawerScreens/HomeScreen'
-import deepFreezeAndThrowOnMutationInDev from 'react-native/Libraries/Utilities/deepFreezeAndThrowOnMutationInDev';
+// import deepFreezeAndThrowOnMutationInDev from 'react-native/Libraries/Utilities/deepFreezeAndThrowOnMutationInDev';
 
 
 const API = REACT_NATIVE_APP_API_KEY
@@ -31,8 +31,15 @@ const AxleCheckbox = (props) => {
     const id = props.mechanicId
     const username = props.username
     const usernumber = props.usernumber
+    const useremail = props.useremail
+    const carcompany = props.carcompany
+    const model = props.model
+    const modelyear = props.modelyear
     const mechanicname = props.mechanicname
     const mechanicnumber = props.mechanicnumber
+    const mechanicaddress = props.mechanicaddress
+    const mechanicspeciality = props.mechanicspeciality
+    const mechanictype = props.mechanictype
     const idd = props.idd
 
 
@@ -169,13 +176,26 @@ const AxleCheckbox = (props) => {
             .then((responseJson) => {
                 if (responseJson) {
                     showSuccessToastWithGravity()
-                    let url1 = `${API}confirmedbooking/`
-                    console.log(url1 + idd)
-                    fetch(url1 + idd, {
-                        method: 'PUT',
-                        body: JSON.stringify({
-                            Status: 'Completed'
-                        }),
+
+                    const data1 = {
+                        User_Name: username,
+                        User_Number: usernumber,
+                        User_Email: useremail,
+                        Car_Company: carcompany,
+                        Model: model,
+                        Model_Year: modelyear,
+                        Mechanic_Name: mechanicname,
+                        Mechanic_Number: mechanicnumber,
+                        Mechanic_Address: mechanicaddress,
+                        Mechanic_Speciality: mechanicspeciality,
+                        Mechanic_Type: mechanictype,
+                        Status: 'Completed'
+                    }
+                    let url1 = `${API}completedbooking/completedbooking `
+                    // console.log(url1 + idd)
+                    fetch(url1, {
+                        method: 'POST',
+                        body: JSON.stringify(data1),
                         headers: {
                             'Content-type': 'application/json; charset=UTF-8',
                         },
@@ -187,6 +207,20 @@ const AxleCheckbox = (props) => {
                         })
                         .catch(err => {
                             console.log({ err });
+                        })
+
+
+                    let url2 = `${API}confirmedbooking/`
+
+                    fetch(url2 + idd, {
+                        method: 'DELETE',
+                    })
+                        .then(resp => resp.json())
+                        .then(res => {
+
+                        }).catch(err => {
+                            console.log({ err });
+                            reject(err);
                         })
                     setState(initialState)
                     navigation.navigate('HomeScreen')

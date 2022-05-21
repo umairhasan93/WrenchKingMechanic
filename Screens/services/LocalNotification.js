@@ -32,7 +32,7 @@ export const LocalNotification = () => {
         autoCancel: true,
         title: "Booking Request", // (optional)
         message: "Your Have a Pending Request ", // (required)
-        vibrate: true,
+        vibrate: false,
         vibration: 300,
         color: "green",
         playSound: true,

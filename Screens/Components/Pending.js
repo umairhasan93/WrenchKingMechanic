@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     Dimensions,
     Modal,
-    ToastAndroid
+    ToastAndroid,
+    Alert
 } from 'react-native';
 import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -18,6 +19,7 @@ import { REACT_NATIVE_APP_API_KEY } from '@env'
 import MenuButton from '../Components/NavigationDrawerHeader'
 
 const API = REACT_NATIVE_APP_API_KEY
+console.log(API)
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
@@ -28,6 +30,7 @@ export default Pending = ({ navigation, route }) => {
 
     const id = route.params
     const i = id.number
+
     const showToastWithGravity = () => {
         ToastAndroid.showWithGravity(
             'Booking Confirmed',
@@ -83,7 +86,7 @@ export default Pending = ({ navigation, route }) => {
 
     useEffect(() => {
         let url = `${API}booking/mechanicPendingBooking/`
-        console.log(i.id)
+        console.log(url)
         fetch(url + i.id)
             .then(resp => resp.json())
             .then(resp => setBookings(resp))
@@ -95,114 +98,37 @@ export default Pending = ({ navigation, route }) => {
             .then(resp => setConfirmedBooking(resp))
             .catch((error) => console.error(error))
 
-    }, [])
+    }, [bookings])
 
     const TimeSelection = () => {
         setTime()
         if (state.Das === true) {
             setTime('10:00')
-            console.warn(time)
+            // console.warn(time)
         } if (state.Bara === true) {
             setTime('12:00')
-            console.warn(time)
+            // console.warn(time)
 
         } if (state.Do === true) {
             setTime("02:00")
-            console.warn(time)
+            // console.warn(time)
 
         } if (state.Char === true) {
             setTime("04:00")
-            console.warn(time)
+            // console.warn(time)
 
         } if (state.Che === true) {
             setTime("06:00")
-            console.warn(time)
+            // console.warn(time)
 
         }
 
-    }
-
-    const confirm = () => {
-        if (state.Das === true || state.Bara === true || state.Do === true || state.Char === true || state.Che === true) {
-            TimeSelection()
-            console.warn(time)
-            setModalVisible(!modalVisible)
-        } else {
-            showToastWithGravityError()
-        }
-    }
-
-    const Accept = () => {
-
-        if (state.Das === true || state.Bara === true || state.Do === true || state.Char === true || state.Che === true) {
-            let url = `${API}booking/`
-            console.log(url + identifier)
-            fetch(url + identifier, {
-                method: 'PUT',
-                body: JSON.stringify({
-                    Status: 'Confirmed'
-                }),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-            })
-
-                .then((response) => response.json())
-                .then((json) => {
-                    // console.log(json)
-                })
-                .catch(err => {
-                    console.log({ err });
-                })
-
-
-            let url1 = `${API}confirmedbooking/confirmedbooking`
-            fetch(url1, {
-                method: 'POST',
-                body: JSON.stringify({
-                    User_Name: username,
-                    User_Number: usernumber,
-                    User_Email: useremail,
-                    Car_Company: carcompany,
-                    Model: model,
-                    Model_Year: modelyear,
-                    Mechanic_Name: mechanicname,
-                    Mechanic_Number: mechanicnumber,
-                    Mechanic_Address: mechanicaddress,
-                    Mechanic_Speciality: mechanicspeciality,
-                    Booking_Date: bookingdate,
-                    Requested_Date: requesteddate,
-                    Type: type,
-                    Status: 'Confirmed',
-                    Time_Of_Service: time
-                }),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-            })
-
-                .then((response) => response.json())
-                .then((json) => {
-                    console.log(json)
-                    showToastWithGravity()
-                })
-                .catch(err => {
-                    console.log({ err });
-                })
-        } else {
-            showToastWithGravityError()
-            setModalVisible(true)
-        }
     }
 
     const timeDisplay = () => {
         for (var i = 0; i < confirmedBooking.length; i++) {
             return (
                 <View>
-                    {/* <Text>{chkDate}</Text> */}
-                    {/* <Text>{confirmedBooking[i].Requested_Date}</Text> */}
-                    {/* <Text>{confirmedBooking[j].Time_Of_Service}</Text> */}
-
                     <View style={{ flexDirection: 'row' }}>
                         <View style={styles.checkboxWrapper}>
                             <CheckBox
@@ -282,6 +208,277 @@ export default Pending = ({ navigation, route }) => {
 
     }
 
+    const confirm = () => {
+        if (state.Das === true || state.Bara === true || state.Do === true || state.Char === true || state.Che === true) {
+            TimeSelection()
+            // console.warn(time)
+            setModalVisible(!modalVisible)
+        } else {
+            showToastWithGravityError()
+        }
+    }
+
+    const Accept = () => {
+
+        if (state.Das === true || state.Bara === true || state.Do === true || state.Char === true || state.Che === true) {
+            let url = `${API}booking/`
+            // console.log(url + identifier)
+            fetch(url + identifier, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    Status: 'Confirmed'
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            })
+
+                .then((response) => response.json())
+                .then((json) => {
+                    // console.log(json)
+                })
+                .catch(err => {
+                    console.log({ err });
+                })
+
+
+            let url1 = `${API}confirmedbooking/confirmedbooking`
+            fetch(url1, {
+                method: 'POST',
+                body: JSON.stringify({
+                    User_Name: username,
+                    User_Number: usernumber,
+                    User_Email: useremail,
+                    Car_Company: carcompany,
+                    Model: model,
+                    Model_Year: modelyear,
+                    Mechanic_Name: mechanicname,
+                    Mechanic_Number: mechanicnumber,
+                    Mechanic_Address: mechanicaddress,
+                    Mechanic_Speciality: mechanicspeciality,
+                    Booking_Date: bookingdate,
+                    Requested_Date: requesteddate,
+                    Type: type,
+                    Status: 'Confirmed',
+                    Time_Of_Service: time
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            })
+
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log(json)
+                    showToastWithGravity()
+                    setTime('')
+                })
+                .catch(err => {
+                    console.log({ err });
+                })
+        } else {
+            showToastWithGravityError()
+            setModalVisible(true)
+        }
+    }
+
+    const Delete = (booking) => {
+        console.log(booking._id);
+        new Promise((resolve, reject) => {
+            const index = bookings.findIndex(x => x._id === booking._id);
+            const updatedData = [...bookings];
+            updatedData.splice(index, 1);
+
+            let url = `${API}booking/`
+
+            fetch(url + booking._id, {
+                method: 'DELETE',
+            })
+                .then(resp => resp.json())
+                .then(res => {
+                    console.log({ res });
+                    console.log(updatedData)
+                    setBookings(updatedData)
+
+                    resolve();
+                }).catch(err => {
+                    console.log({ err });
+                    reject(err);
+                })
+        })
+
+    }
+
+    const [showBox, setShowBox] = useState(true);
+
+    const showConfirmDialog = (booking) => {
+        // console.log('Ddialog');
+        return Alert.alert(
+            "Are your sure?",
+            "Are you sure you want to Cancel Your Booking?",
+            [
+                // The "Yes" button
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        setShowBox(false);
+                        setTime('')
+                        Delete(booking)
+                    },
+                },
+                // The "No" button
+                // Does nothing but dismiss the dialog when tapped
+                {
+                    text: "No",
+                },
+            ]
+        );
+    };
+
+    const display = () => {
+        if (bookings.length === 0) {
+            return (
+                <View style={{ marginTop: 230 }}>
+                    <Text style={{ color: 'red', fontSize: 20 }}>No Pending Request .</Text>
+                </View>
+            )
+        } else {
+            return (
+                bookings.map((booking, index) => {
+                    return (
+                        <Card key={index} style={styles.card}>
+                            <View style={{ alignItems: 'center' }}>
+                                <View style={{ flexDirection: 'row', width: WIDTH }}>
+                                    <TouchableOpacity
+                                        style={styles.timeIcon}
+                                        onPress={() => {
+                                            setModalVisible(true)
+                                            setIdentifier(booking._id)
+                                            setChkDate(booking.Requested_Date)
+                                        }}
+                                        activeOpacity={0.6}
+                                    >
+                                        <Ionicons
+                                            name="time-outline"
+                                            size={30}
+                                            color='#fff'
+                                        />
+                                    </TouchableOpacity>
+                                    <View style={{ width: 163, alignItems: 'center', marginLeft: 35, marginRight: 30 }}>
+                                        <Text style={styles.nameText}>{booking.User_Name}</Text>
+                                    </View>
+
+                                </View>
+
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View>
+                                        <Text style={{ fontSize: 15 }}>Service:</Text>
+                                    </View>
+                                    <View style={{ marginLeft: 4 }}>
+                                        <Text style={{ color: 'red', textDecorationLine: 'underline', fontSize: 15 }}>{booking.Mechanic_Speciality}</Text>
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', marginTop: 30 }}>
+                                <View style={{ width: 160, alignItems: 'center' }}>
+                                    <View>
+                                        <Text style={{ fontSize: 15, color: 'black', fontWeight: 'bold' }}>{booking.Requested_Date}</Text>
+                                    </View>
+                                    <View style={{ marginTop: 2 }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Requested Date</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ width: 160, alignItems: 'center' }}>
+                                    <View>
+                                        <Text style={{ fontSize: 15, color: 'black' }}>{booking.Booking_Date}</Text>
+                                    </View>
+                                    <View style={{ marginTop: 2 }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Date of Appointment</Text>
+                                    </View>
+
+                                </View>
+                            </View>
+                            <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'center' }}>
+
+                                <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: '#ff000095',
+                                            height: HEIGHT / 20,
+                                            width: WIDTH / 4,
+                                            borderRadius: 30,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row'
+                                        }}
+
+                                        onPress={() => showConfirmDialog(booking)}
+                                    >
+                                        <Icon
+                                            name='times'
+                                            size={16}
+                                            style={{
+                                                marginLeft: -10,
+                                                marginRight: 4
+                                            }}
+                                        />
+                                        <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Cancel</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setIdentifier(booking._id)
+                                            setUsername(booking.User_Name)
+                                            setUsernumber(booking.User_Number)
+                                            setUseremail(booking.User_Email)
+                                            setCarcompany(booking.Car_Company)
+                                            setModel(booking.Model)
+                                            setModelyear(booking.Model_Year)
+                                            setMechanicname(booking.Mechanic_Name)
+                                            setMechanicnumber(booking.Mechanic_Number)
+                                            setMechanicaddress(booking.Mechanic_Address)
+                                            setMechanicspeciality(booking.Mechanic_Speciality)
+                                            setBookingdate(booking.Booking_Date)
+                                            setRequesteddate(booking.Requested_Date)
+                                            setType(booking.Type)
+                                            Accept()
+                                        }}
+                                        style={{
+                                            backgroundColor: '#12AD2B',
+                                            height: HEIGHT / 20,
+                                            width: WIDTH / 4,
+                                            borderRadius: 30,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row'
+                                        }}
+                                    >
+                                        <Icon
+                                            name='check'
+                                            size={16}
+                                            style={{
+                                                marginLeft: -10,
+                                                marginRight: 4
+                                            }}
+                                        />
+                                        <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Accept</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Card>
+                    )
+                })
+            )
+
+        }
+    }
+
+
+
 
     return (
 
@@ -348,7 +545,81 @@ export default Pending = ({ navigation, route }) => {
                                 </View>
 
                                 {
-                                    timeDisplay()
+                                    (confirmedBooking.length > 0) ? (timeDisplay()) : (
+                                        <View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={styles.checkboxWrapper}>
+                                                    <CheckBox
+                                                        // disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "10:00") ? true : false}
+                                                        value={state.Das}
+                                                        onValueChange={value =>
+                                                            setState({
+
+                                                                Das: value,
+                                                            })
+                                                        }
+                                                    />
+                                                    <Text style={styles.checkboxText}>10:00</Text>
+                                                </View>
+
+                                                <View style={styles.checkboxWrapper}>
+                                                    <CheckBox
+                                                        // disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "12:00") ? true : false}
+                                                        value={state.Bara}
+                                                        onValueChange={value =>
+                                                            setState({
+
+                                                                Bara: value,
+                                                            })
+                                                        }
+                                                    />
+                                                    <Text style={styles.checkboxText}>12:00</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={styles.checkboxWrapper}>
+                                                    <CheckBox
+                                                        // disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "02:00") ? true : false}
+                                                        value={state.Do}
+                                                        onValueChange={value =>
+                                                            setState({
+
+                                                                Do: value,
+                                                            })
+                                                        }
+                                                    />
+                                                    <Text style={styles.checkboxText}>02:00</Text>
+                                                </View>
+
+                                                <View style={styles.checkboxWrapper}>
+                                                    <CheckBox
+                                                        // disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "04:00") ? true : false}
+                                                        value={state.Char}
+                                                        onValueChange={value =>
+                                                            setState({
+
+                                                                Char: value,
+                                                            })
+                                                        }
+                                                    />
+                                                    <Text style={styles.checkboxText}>04:00</Text>
+                                                </View>
+                                            </View>
+                                            <View style={styles.checkboxWrapper}>
+                                                <CheckBox
+                                                    // disabled={(confirmedBooking[i].Requested_Date === chkDate && confirmedBooking[i].Time_Of_Service === "06:00") ? true : false}
+                                                    value={state.Che}
+                                                    onValueChange={value =>
+                                                        setState({
+
+                                                            Che: value,
+                                                        })
+                                                    }
+                                                />
+                                                <Text style={styles.checkboxText}>06:00</Text>
+                                            </View>
+                                        </View>
+                                    )
                                 }
 
 
@@ -366,132 +637,7 @@ export default Pending = ({ navigation, route }) => {
                         </View>
                     </Modal >
                     {
-                        bookings.map((booking, index) => {
-                            return (
-                                <Card key={index} style={styles.card}>
-                                    <View style={{ alignItems: 'center' }}>
-                                        <View style={{ flexDirection: 'row', width: WIDTH }}>
-                                            <TouchableOpacity
-                                                style={styles.timeIcon}
-                                                onPress={() => {
-                                                    setModalVisible(true)
-                                                    setIdentifier(booking._id)
-                                                    setChkDate(booking.Requested_Date)
-                                                }}
-                                                activeOpacity={0.6}
-                                            >
-                                                <Ionicons
-                                                    name="time-outline"
-                                                    size={30}
-                                                    color='#fff'
-                                                />
-                                            </TouchableOpacity>
-                                            <View style={{ width: 163, alignItems: 'center', marginLeft: 35, marginRight: 30 }}>
-                                                <Text style={styles.nameText}>{booking.User_Name}</Text>
-                                            </View>
-
-                                        </View>
-
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <View>
-                                                <Text style={{ fontSize: 15 }}>Service:</Text>
-                                            </View>
-                                            <View style={{ marginLeft: 4 }}>
-                                                <Text style={{ color: 'red', textDecorationLine: 'underline', fontSize: 15 }}>{booking.Mechanic_Speciality}</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-
-                                    <View style={{ flexDirection: 'row', marginTop: 30 }}>
-                                        <View style={{ width: 160, alignItems: 'center' }}>
-                                            <View>
-                                                <Text style={{ fontSize: 15, color: 'black', fontWeight: 'bold' }}>{booking.Requested_Date}</Text>
-                                            </View>
-                                            <View style={{ marginTop: 2 }}>
-                                                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Requested Date</Text>
-                                            </View>
-                                        </View>
-
-                                        <View style={{ width: 160, alignItems: 'center' }}>
-                                            <View>
-                                                <Text style={{ fontSize: 15, color: 'black' }}>{booking.Booking_Date}</Text>
-                                            </View>
-                                            <View style={{ marginTop: 2 }}>
-                                                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Date of Appointment</Text>
-                                            </View>
-
-                                        </View>
-                                    </View>
-                                    <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'center' }}>
-
-                                        <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
-                                            <TouchableOpacity
-                                                style={{
-                                                    backgroundColor: '#ff000095',
-                                                    height: HEIGHT / 20,
-                                                    width: WIDTH / 4,
-                                                    borderRadius: 30,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    flexDirection: 'row'
-                                                }}
-                                            >
-                                                <Icon
-                                                    name='times'
-                                                    size={16}
-                                                    style={{
-                                                        marginLeft: -10,
-                                                        marginRight: 4
-                                                    }}
-                                                />
-                                                <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Cancel</Text>
-                                            </TouchableOpacity>
-                                        </View>
-
-                                        <View style={{ width: WIDTH / 2.5, alignItems: 'center' }}>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    setIdentifier(booking._id)
-                                                    setUsername(booking.User_Name)
-                                                    setUsernumber(booking.User_Number)
-                                                    setUseremail(booking.User_Email)
-                                                    setCarcompany(booking.Car_Company)
-                                                    setModel(booking.Model)
-                                                    setModelyear(booking.Model_Year)
-                                                    setMechanicname(booking.Mechanic_Name)
-                                                    setMechanicnumber(booking.Mechanic_Number)
-                                                    setMechanicaddress(booking.Mechanic_Address)
-                                                    setMechanicspeciality(booking.Mechanic_Speciality)
-                                                    setBookingdate(booking.Booking_Date)
-                                                    setRequesteddate(booking.Requested_Date)
-                                                    setType(booking.Type)
-                                                    Accept()
-                                                }}
-                                                style={{
-                                                    backgroundColor: '#12AD2B',
-                                                    height: HEIGHT / 20,
-                                                    width: WIDTH / 4,
-                                                    borderRadius: 30,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    flexDirection: 'row'
-                                                }}
-                                            >
-                                                <Icon
-                                                    name='check'
-                                                    size={16}
-                                                    style={{
-                                                        marginLeft: -10,
-                                                        marginRight: 4
-                                                    }}
-                                                />
-                                                <Text style={{ fontSize: 15, color: 'black', marginTop: -1 }}>Accept</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </Card>
-                            )
-                        })
+                        display()
                     }
                 </ScrollView>
             </View>

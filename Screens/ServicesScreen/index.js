@@ -26,7 +26,20 @@ const HEIGHT = Dimensions.get('window').height
 
 const Services = ({ navigation, route }) => {
 
-    const { username, usernumber, mechanicname, mechanicnumber, idd } = route.params
+    const {
+        username,
+        usernumber,
+        useremail,
+        carcompany,
+        model,
+        modelyear,
+        mechanicname,
+        mechanicnumber,
+        mechanicaddress,
+        mechanicspeciality,
+        mechanictype,
+        idd
+    } = route.params
     const [isChecked, setIsChecked] = useState(false)
 
     const [services, setServices] = useState([])
@@ -66,8 +79,15 @@ const Services = ({ navigation, route }) => {
                     mechanicId={id}
                     username={username}
                     usernumber={usernumber}
+                    useremail={useremail}
+                    carcompant={carcompany}
+                    model={model}
+                    modelyear={modelyear}
                     mechanicname={mechanicname}
                     mechanicnumber={mechanicnumber}
+                    mechanicaddress={mechanicaddress}
+                    mechanicspeciality={mechanicspeciality}
+                    mechanictype={mechanictype}
                     idd={idd}
                 />
             )
@@ -75,10 +95,17 @@ const Services = ({ navigation, route }) => {
             return (
                 <TuningCheckbox
                     mechanicId={id}
-                    usern={username}
-                    usernum={usernumber}
-                    mechanicn={mechanicname}
-                    mechanicnum={mechanicnumber}
+                    username={username}
+                    usernumber={usernumber}
+                    useremail={useremail}
+                    carcompant={carcompany}
+                    model={model}
+                    modelyear={modelyear}
+                    mechanicname={mechanicname}
+                    mechanicnumber={mechanicnumber}
+                    mechanicaddress={mechanicaddress}
+                    mechanicspeciality={mechanicspeciality}
+                    mechanictype={mechanictype}
                     idd={idd}
                 />
             )
@@ -86,10 +113,17 @@ const Services = ({ navigation, route }) => {
             return (
                 <ACCheckbox
                     mechanicId={id}
-                    usern={username}
-                    usernum={usernumber}
-                    mechanicn={mechanicname}
-                    mechanicnum={mechanicnumber}
+                    username={username}
+                    usernumber={usernumber}
+                    useremail={useremail}
+                    carcompant={carcompany}
+                    model={model}
+                    modelyear={modelyear}
+                    mechanicname={mechanicname}
+                    mechanicnumber={mechanicnumber}
+                    mechanicaddress={mechanicaddress}
+                    mechanicspeciality={mechanicspeciality}
+                    mechanictype={mechanictype}
                     idd={idd}
                 />
             )
