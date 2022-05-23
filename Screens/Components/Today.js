@@ -16,7 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const API = REACT_NATIVE_APP_API_KEY
-console.log(API)
+console.log(REACT_NATIVE_APP_API_KEY)
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height

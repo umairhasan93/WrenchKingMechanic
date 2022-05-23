@@ -20,7 +20,7 @@ import Loader from './Components/loader';
 import { REACT_NATIVE_APP_API_KEY } from '@env'
 
 const API = REACT_NATIVE_APP_API_KEY
-// console.log(API)
+console.log(API)
 const LoginScreen = ({ navigation }) => {
     const [userName, setUserName] = useState('shahjee9122');
     const [password, setPassword] = useState('1234');

@@ -21,7 +21,7 @@ import Todos from '../TODOS'
 import Services from '../ServicesScreen'
 
 const API = REACT_NATIVE_APP_API_KEY
-// console.log(REACT_NATIVE_APP_API_KEY)
+console.log(API)
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height

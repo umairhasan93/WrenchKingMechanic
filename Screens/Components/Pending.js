@@ -86,7 +86,7 @@ export default Pending = ({ navigation, route }) => {
 
     useEffect(() => {
         let url = `${API}booking/mechanicPendingBooking/`
-        console.log(url)
+        // console.log(url)
         fetch(url + i.id)
             .then(resp => resp.json())
             .then(resp => setBookings(resp))

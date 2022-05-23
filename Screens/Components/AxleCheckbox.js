@@ -224,6 +224,8 @@ const AxleCheckbox = (props) => {
                         })
                     setState(initialState)
                     navigation.navigate('HomeScreen')
+                    setModalVisible(false)
+
                 }
 
             })
@@ -231,8 +233,6 @@ const AxleCheckbox = (props) => {
                 console.error(error);
             });
 
-        setModalVisible(false)
-        navigation.navigate('HomeScreen')
     }
 
     useEffect(() => {
